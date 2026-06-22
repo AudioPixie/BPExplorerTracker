@@ -7,7 +7,7 @@ Go to [Releases](https://github.com/AudioPixie/BPExplorerTracker/releases) to do
 
 **NOTE: Autotracking is currently incompatible with MacOSX**
 
-All builds come bundled with a compatible MelonLoader mod for autotracking hooking. After installing MelonLoader, place ExplorerTrackerHook.dll in your mods folder. Assuming your filepath is the default one steam uses, this should be located at `C:/Program Files (x86)/Steam/steamapps/common/Blue Prince/Mods`.
+All builds come bundled with a compatible MelonLoader mod for autotracking hooking. After installing MelonLoader and running the game once so it can create the necessary directories, place ExplorerTrackerHook.dll in your mods folder. Assuming your filepath is the default one steam uses, this should be located at `C:/Program Files (x86)/Steam/steamapps/common/Blue Prince/Mods`.
 
 In the tracker, the default filepath will point at `C:/Program Files (x86)/Steam/steamapps/common/Blue Prince` for the json files the mod creates.
 
