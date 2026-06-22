@@ -20,3 +20,9 @@ If you would like to uninstall the mod, run the MelonLoader setup app (the same 
 ## Manual Control
 
 With Automatic unchecked, the tracker can be used manually. Icons can be clicked to turn them on and off, and the Found Floorplans and Studio Additions pages can be right-clicked to toggle greyscale. There is a Reset Run button present for manual tracking. The chess icon can be left or right clicked to cycle through the pieces.
+
+## Suggested OBS Setup
+
+To remove the background, it is suggested to leave the background black `#000000` and add a Luma Key as a filter with the following settings:
+
+<img width="581" height="188" alt="Screenshot 2026-06-21 235255" src="https://github.com/user-attachments/assets/31355ad6-75d2-4ab0-b5db-776e30100f32" />
