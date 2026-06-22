@@ -1,7 +1,7 @@
 # BPExplorerTracker
 ### An automatic tracker for Blue Prince Explorer% runs
 
-Go to Releases to download the latest build
+Go to [Releases](https://github.com/AudioPixie/BPExplorerTracker/releases) to download the latest build
 
 ## Autotracking setup
 
@@ -9,7 +9,7 @@ Go to Releases to download the latest build
 
 All builds come with a bundled compatible MelonLoader mod for autotracking hooking. After installing MelonLoader, place ExplorerTrackerHook.dll in your mods folder. Assuming your filepath is the default one steam uses, this should be located at `C:/Program Files (x86)/Steam/steamapps/common/Blue Prince/Mods` (after installing MelonLoader).
 
-Mod Repo to view source code
+[Mod Repo to view source code](https://github.com/AudioPixie/ExplorerTrackerHook)
 
 ## To uninstall
 
