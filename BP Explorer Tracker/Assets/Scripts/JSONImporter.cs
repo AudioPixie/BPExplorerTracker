@@ -55,6 +55,8 @@ public class JSONImporter : MonoBehaviour
     public GameObject VestibuleObject;
     public GameObject ChessObject;
 
+    public BPSaveDataReader SaveDataReader;
+
     void Awake()
     {
         jsonLocation = "C:/Program Files (x86)/Steam/steamapps/common/Blue Prince";
@@ -64,11 +66,22 @@ public class JSONImporter : MonoBehaviour
 
     void Start()
     {
-        LoadDrafts();
-        LoadEvents();
+        LoadData();
 
-        InvokeRepeating("LoadDrafts", 0f, 0.5f);
-        InvokeRepeating("LoadEvents", 0f, 0.5f);
+        InvokeRepeating("LoadData", 0f, 5f);
+    }
+
+    public void LoadData()
+    {
+        if (SaveDataReader != null)
+        {
+            SaveDataReader.LoadData();
+        }
+        else
+        {
+            LoadDrafts();
+            LoadData();
+        }
     }
 
     public void LoadDrafts()
