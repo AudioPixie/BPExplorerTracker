@@ -2433,56 +2433,6 @@ MonoBehaviour:
   m_Spacing: {x: 8.5, y: 8.5}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!1 &248025808
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 248025810}
-  - component: {fileID: 248025809}
-  m_Layer: 0
-  m_Name: PlatformManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &248025809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 248025808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f688258336df204fbf11297faff93c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlatformManager
-  AutoToggle: {fileID: 2135296342}
-  AutoToggleCheck: {fileID: 936898709}
-  FilePathInputField: {fileID: 795787784}
-  FilePathPlaceholder: {fileID: 1674938226}
-  ApplyButton: {fileID: 1038709056}
-  ResetButton: {fileID: 321835520}
---- !u!4 &248025810
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 248025808}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 480.99106, y: 227.46391, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &251042855
 GameObject:
   m_ObjectHideFlags: 0
@@ -3003,7 +2953,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PathChanger
   inputField: {fileID: 795787784}
-  jsonImporter: {fileID: 335262007}
+  saveDataReader: {fileID: 1779961392}
 --- !u!114 &321835520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3232,78 +3182,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5616625646333601309, guid: 1503181860e4287428169019972f9593, type: 3}
   m_PrefabInstance: {fileID: 325557441}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &335262006
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 335262008}
-  - component: {fileID: 335262007}
-  m_Layer: 0
-  m_Name: JSONImporter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &335262007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 335262006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7637356c9bdea14290a4239fd22f7fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JSONImporter
-  jsonLocation: 
-  jsonPathDrafts: 
-  jsonPathEvents: 
-  rooms: []
-  events:
-    bools: []
-    ints: []
-  AutoToggle: {fileID: 2135296342}
-  WarningText: {fileID: 466068041}
-  Room46Object: {fileID: 1250042922}
-  PlanetariumObject: {fileID: 1463314130}
-  ConservatoryObject: {fileID: 1399177203}
-  TunnelObject: {fileID: 992261186}
-  MechanariumObject: {fileID: 1235242258}
-  ClosedExhibitObject: {fileID: 2110498418}
-  LostAndFoundObject: {fileID: 657548481}
-  ThroneRoomObject: {fileID: 469527924}
-  TreasureTroveObject: {fileID: 935650864}
-  DovecoteObject: {fileID: 405528984}
-  TheKennelObject: {fileID: 606073338}
-  ClockTowerObject: {fileID: 1531426605}
-  ClassroomObject: {fileID: 2011081756}
-  DormitoryObject: {fileID: 1957786307}
-  SolariumObject: {fileID: 1621853283}
-  CasinoObject: {fileID: 794236602}
-  VestibuleObject: {fileID: 1068658924}
-  ChessObject: {fileID: 103143901}
-  SaveDataReader: {fileID: 1779961392}
---- !u!4 &335262008
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 335262006}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02514, y: -0.01077, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &338505943
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3523,8 +3401,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveManager
   autoToggle: {fileID: 2135296342}
-  jSONImporter: {fileID: 335262007}
+  saveDataReader: {fileID: 1779961392}
   bgColor: {fileID: 1061589262}
+  saveFileSelect: {fileID: 1436832174}
 --- !u!4 &358047739
 Transform:
   m_ObjectHideFlags: 0
@@ -4375,143 +4254,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5616625646333601309, guid: 1503181860e4287428169019972f9593, type: 3}
   m_PrefabInstance: {fileID: 439259169}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &466068041
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 466068044}
-  - component: {fileID: 466068043}
-  - component: {fileID: 466068042}
-  m_Layer: 5
-  m_Name: Warning Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &466068042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466068041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: Mod files not detected
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4278243583
-  m_fontColor: {r: 1, g: 0.8156863, b: 0, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 2
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_characterHorizontalScale: 1
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &466068043
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466068041}
-  m_CullTransparentMesh: 1
---- !u!224 &466068044
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466068041}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 527189322}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -575.4, y: 92}
-  m_SizeDelta: {x: 163.6, y: 16}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &469527922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5077,7 +4819,6 @@ RectTransform:
   - {fileID: 1959572377}
   - {fileID: 1061589261}
   - {fileID: 2135296340}
-  - {fileID: 466068044}
   - {fileID: 509422727}
   - {fileID: 729070848}
   - {fileID: 1436832173}
@@ -9157,7 +8898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PathChanger
   inputField: {fileID: 795787784}
-  jsonImporter: {fileID: 335262007}
+  saveDataReader: {fileID: 1779961392}
 --- !u!1 &1061589260
 GameObject:
   m_ObjectHideFlags: 0
@@ -10987,7 +10728,6 @@ GameObject:
   - component: {fileID: 1218477711}
   - component: {fileID: 1218477710}
   - component: {fileID: 1218477709}
-  - component: {fileID: 1218477708}
   m_Layer: 5
   m_Name: Save Button
   m_TagString: Untagged
@@ -11015,20 +10755,6 @@ RectTransform:
   m_AnchoredPosition: {x: -326, y: 76}
   m_SizeDelta: {x: 70, y: 30}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1218477708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1218477706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8ad74903c735844389101524a10c371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PathChanger
-  inputField: {fileID: 795787784}
-  jsonImporter: {fileID: 335262007}
 --- !u!114 &1218477709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13211,7 +12937,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BluePrint
+  m_text: Save Slot 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13437,9 +13163,9 @@ RectTransform:
   - {fileID: 2095972352}
   m_Father: {fileID: 527189322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -790.6, y: -415}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -584.69995, y: 91.70001}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1436832174
@@ -13463,9 +13189,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 0.5372549, g: 0.5372549, b: 0.5372549, a: 1}
+    m_HighlightedColor: {r: 0.8392157, g: 0.8392157, b: 0.8392157, a: 1}
+    m_PressedColor: {r: 0.69803923, g: 0.69803923, b: 0.69803923, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -13493,16 +13219,16 @@ MonoBehaviour:
   m_MultiSelect: 0
   m_Options:
     m_Options:
-    - m_Text: BluePrint
+    - m_Text: Save Slot 1
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: BluePrint2
+    - m_Text: Save Slot 2
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: BluePrint3
+    - m_Text: Save Slot 3
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: BluePrint4
+    - m_Text: Save Slot 4
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
@@ -15240,7 +14966,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: C:/Program Files (x86)/Steam/steamapps/common/Blue Prince
+  m_text: Put Save file path here, then click Apply
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15941,8 +15667,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2a75290b260dc41afc287536132eb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BPSaveDataReader
-  jsonImporter: {fileID: 335262007}
+  AutoToggle: {fileID: 2135296342}
   LoadingText: {fileID: 1993637003}
+  saveDirectoryField: {fileID: 795787784}
+  Room46Object: {fileID: 1250042922}
+  PlanetariumObject: {fileID: 1463314130}
+  ConservatoryObject: {fileID: 1399177203}
+  TunnelObject: {fileID: 992261186}
+  MechanariumObject: {fileID: 1235242258}
+  ClosedExhibitObject: {fileID: 2110498418}
+  LostAndFoundObject: {fileID: 657548481}
+  ThroneRoomObject: {fileID: 469527924}
+  TreasureTroveObject: {fileID: 935650864}
+  DovecoteObject: {fileID: 405528984}
+  TheKennelObject: {fileID: 606073338}
+  ClockTowerObject: {fileID: 1531426605}
+  ClassroomObject: {fileID: 2011081756}
+  DormitoryObject: {fileID: 1957786307}
+  SolariumObject: {fileID: 1621853283}
+  CasinoObject: {fileID: 794236602}
+  VestibuleObject: {fileID: 1068658924}
+  ChessObject: {fileID: 103143901}
 --- !u!1001 &1794334258
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17498,7 +17243,6 @@ GameObject:
   - component: {fileID: 1959572381}
   - component: {fileID: 1959572380}
   - component: {fileID: 1959572379}
-  - component: {fileID: 1959572378}
   m_Layer: 5
   m_Name: Load Button
   m_TagString: Untagged
@@ -17526,20 +17270,6 @@ RectTransform:
   m_AnchoredPosition: {x: -246, y: 76}
   m_SizeDelta: {x: 70, y: 30}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1959572378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959572376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8ad74903c735844389101524a10c371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PathChanger
-  inputField: {fileID: 795787784}
-  jsonImporter: {fileID: 335262007}
 --- !u!114 &1959572379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17854,8 +17584,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -622.7, y: 124}
-  m_SizeDelta: {x: 163.6, y: 16}
+  m_AnchoredPosition: {x: -464.5, y: 90.7}
+  m_SizeDelta: {x: 69.47, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1993637005
 MonoBehaviour:
@@ -19092,7 +18822,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -710.9, y: 92}
+  m_AnchoredPosition: {x: -719.1, y: 92}
   m_SizeDelta: {x: 95.5, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2135296341
@@ -19167,10 +18897,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 466068041}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1779961392}
+        m_TargetAssemblyTypeName: BPSaveDataReader, Assembly-CSharp
+        m_MethodName: StartProcessSaveThread
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -19187,8 +18917,6 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 1291376961}
   - {fileID: 527189322}
-  - {fileID: 335262008}
   - {fileID: 358047739}
   - {fileID: 1162468947}
-  - {fileID: 248025810}
   - {fileID: 1779961391}

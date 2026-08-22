@@ -9,10 +9,22 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-public class SaveSlotFields
+[System.Serializable]
+public class RoomEntry
 {
-    public Dictionary<string, bool> BoolEvents = new Dictionary<string, bool>();
-    public Dictionary<string, int> IntEvents = new Dictionary<string, int>();
+    public int roomId;
+    public int globalDrafts;
+    public int todayDrafts;
+}
+
+[System.Serializable] public class BoolEntry   { public string key; public bool value; }
+[System.Serializable] public class IntEntry    { public string key; public int value; }
+
+[System.Serializable]
+public class AllEvents
+{
+    public List<BoolEntry> bools;
+    public List<IntEntry> ints;
 }
 
 // This class is based off of Bacowl's work found here: https://github.com/BAC0WL/explorer-tracker-addon
@@ -20,12 +32,28 @@ public class SaveSlotFields
 public class BPSaveDataReader : MonoBehaviour
 {
     // Serialized fields
-    [SerializeField]
-    private JSONImporter jsonImporter;
+    public Toggle AutoToggle;
+    public GameObject LoadingText;
+    public TMP_InputField saveDirectoryField;
 
-    [SerializeField]
-    private GameObject LoadingText;
-
+    public GameObject Room46Object;
+    public GameObject PlanetariumObject;
+    public GameObject ConservatoryObject;
+    public GameObject TunnelObject;
+    public GameObject MechanariumObject;
+    public GameObject ClosedExhibitObject;
+    public GameObject LostAndFoundObject;
+    public GameObject ThroneRoomObject;
+    public GameObject TreasureTroveObject;
+    public GameObject DovecoteObject;
+    public GameObject TheKennelObject;
+    public GameObject ClockTowerObject;
+    public GameObject ClassroomObject;
+    public GameObject DormitoryObject;
+    public GameObject SolariumObject;
+    public GameObject CasinoObject;
+    public GameObject VestibuleObject;
+    public GameObject ChessObject;
 
     // Const values
     private static readonly string[] DEFAULT_SAVE_DIRS = {
@@ -292,7 +320,15 @@ public class BPSaveDataReader : MonoBehaviour
         RegexOptions.Singleline
     );
 
+
     private string saveDirectory = "";
+    public string SaveDirectory 
+    {
+        get 
+        {
+            return saveDirectory;
+        }
+    }
     private string savePath = "";
     private string savePlainText = "";
     private string saveSlotToLoad = "BluePrint";
@@ -306,8 +342,10 @@ public class BPSaveDataReader : MonoBehaviour
 
     void Start()
     {
-        string initialSaveDirectory = GetSaveDirectory();
-        SetSaveDirectory(initialSaveDirectory);
+        if (String.IsNullOrEmpty(savePath))
+        {
+            ResetSaveDirectory();
+        }
         CreateSaveFileWatcher();
 
         // Do first initial loading of save file
@@ -335,7 +373,6 @@ public class BPSaveDataReader : MonoBehaviour
         }
     }
 
-    // Should probably do something to avoid duplicating all the stuff in jsonImporter, but I don't want to make too many changes to jsonImporter right now.
     public void LoadData()
     {
         RoomItem[] roomItems = FindObjectsByType<RoomItem>(FindObjectsSortMode.None);
@@ -354,58 +391,58 @@ public class BPSaveDataReader : MonoBehaviour
         if (events.bools == null) { return; }
 
         BoolEntry room46 = events.bools.Find(x => x.key == "Room 46 Reached");
-        jsonImporter.Room46Object.GetComponent<RoomItem>().Update46(room46.value);
+        Room46Object.GetComponent<RoomItem>().Update46(room46.value);
 
         BoolEntry addedPlanetarium = events.bools.Find(x => x.key == "Planetarium Added");
-        jsonImporter.PlanetariumObject.GetComponent<RoomItem>().UpdateAddedToPool(addedPlanetarium.value);
+        PlanetariumObject.GetComponent<RoomItem>().UpdateAddedToPool(addedPlanetarium.value);
 
         BoolEntry addedConservatory = events.bools.Find(x => x.key == "Conservatory Added");
-        jsonImporter.ConservatoryObject.GetComponent<RoomItem>().UpdateAddedToPool(addedConservatory.value);
+        ConservatoryObject.GetComponent<RoomItem>().UpdateAddedToPool(addedConservatory.value);
 
         BoolEntry addedTunnel = events.bools.Find(x => x.key == "Tunnel Added");
-        jsonImporter.TunnelObject.GetComponent<RoomItem>().UpdateAddedToPool(addedTunnel.value);
+        TunnelObject.GetComponent<RoomItem>().UpdateAddedToPool(addedTunnel.value);
 
         BoolEntry addedMechanarium = events.bools.Find(x => x.key == "Mechanarium Added");
-        jsonImporter.MechanariumObject.GetComponent<RoomItem>().UpdateAddedToPool(addedMechanarium.value);
+        MechanariumObject.GetComponent<RoomItem>().UpdateAddedToPool(addedMechanarium.value);
 
         BoolEntry addedClosedExhibit = events.bools.Find(x => x.key == "Closed Exhibit Added");
-        jsonImporter.ClosedExhibitObject.GetComponent<RoomItem>().UpdateAddedToPool(addedClosedExhibit.value);
+        ClosedExhibitObject.GetComponent<RoomItem>().UpdateAddedToPool(addedClosedExhibit.value);
 
         BoolEntry addedLostAndFound = events.bools.Find(x => x.key == "Lost&Found Added");
-        jsonImporter.LostAndFoundObject.GetComponent<RoomItem>().UpdateAddedToPool(addedLostAndFound.value);
+        LostAndFoundObject.GetComponent<RoomItem>().UpdateAddedToPool(addedLostAndFound.value);
 
         BoolEntry addedThroneRoom = events.bools.Find(x => x.key == "Throne Room Added");
-        jsonImporter.ThroneRoomObject.GetComponent<RoomItem>().UpdateAddedToPool(addedThroneRoom.value);
+        ThroneRoomObject.GetComponent<RoomItem>().UpdateAddedToPool(addedThroneRoom.value);
 
         BoolEntry addedTreasureTrove = events.bools.Find(x => x.key == "Treasure Trove Added");
-        jsonImporter.TreasureTroveObject.GetComponent<RoomItem>().UpdateAddedToPool(addedTreasureTrove.value);
+        TreasureTroveObject.GetComponent<RoomItem>().UpdateAddedToPool(addedTreasureTrove.value);
 
         BoolEntry addedDovecote = events.bools.Find(x => x.key == "Dovecote Added");
-        jsonImporter.DovecoteObject.GetComponent<RoomItem>().UpdateAddedToPool(addedDovecote.value);
+        DovecoteObject.GetComponent<RoomItem>().UpdateAddedToPool(addedDovecote.value);
 
         BoolEntry addedTheKennel = events.bools.Find(x => x.key == "The Kennel Added");
-        jsonImporter.TheKennelObject.GetComponent<RoomItem>().UpdateAddedToPool(addedTheKennel.value);
+        TheKennelObject.GetComponent<RoomItem>().UpdateAddedToPool(addedTheKennel.value);
 
         BoolEntry addedClockTower = events.bools.Find(x => x.key == "Clock Tower Added");
-        jsonImporter.ClockTowerObject.GetComponent<RoomItem>().UpdateAddedToPool(addedClockTower.value);
+        ClockTowerObject.GetComponent<RoomItem>().UpdateAddedToPool(addedClockTower.value);
 
         BoolEntry addedClassroom = events.bools.Find(x => x.key == "Classroom Added");
-        jsonImporter.ClassroomObject.GetComponent<RoomItem>().UpdateAddedToPool(addedClassroom.value);
+        ClassroomObject.GetComponent<RoomItem>().UpdateAddedToPool(addedClassroom.value);
 
         BoolEntry addedDormitory = events.bools.Find(x => x.key == "Dormitory Added");
-        jsonImporter.DormitoryObject.GetComponent<RoomItem>().UpdateAddedToPool(addedDormitory.value);
+        DormitoryObject.GetComponent<RoomItem>().UpdateAddedToPool(addedDormitory.value);
 
         BoolEntry addedSolarium = events.bools.Find(x => x.key == "Solarium Added");
-        jsonImporter.SolariumObject.GetComponent<RoomItem>().UpdateAddedToPool(addedSolarium.value);
+        SolariumObject.GetComponent<RoomItem>().UpdateAddedToPool(addedSolarium.value);
 
         BoolEntry addedCasino = events.bools.Find(x => x.key == "Casino Added");
-        jsonImporter.CasinoObject.GetComponent<RoomItem>().UpdateAddedToPool(addedCasino.value);
+        CasinoObject.GetComponent<RoomItem>().UpdateAddedToPool(addedCasino.value);
 
         BoolEntry addedVestibule = events.bools.Find(x => x.key == "Vestibule Added");
-        jsonImporter.VestibuleObject.GetComponent<RoomItem>().UpdateAddedToPool(addedVestibule.value);
+        VestibuleObject.GetComponent<RoomItem>().UpdateAddedToPool(addedVestibule.value);
 
         IntEntry currentChess = events.ints.Find(x => x.key == "Chess Power");
-        jsonImporter.ChessObject.GetComponent<KeyChess>().ChangeSprite(currentChess.value);
+        ChessObject.GetComponent<KeyChess>().ChangeSprite(currentChess.value);
     }
 
     public void SetSaveSlot(TMP_Dropdown saveSlot)
@@ -415,9 +452,8 @@ public class BPSaveDataReader : MonoBehaviour
         ForceRestartProcessSave();
     }
 
-    private string GetSaveDirectory()
+    public string GetSaveDirectory()
     {
-        // TODO: Allow users to enter their own save data directory.
         foreach(string saveDirectory in DEFAULT_SAVE_DIRS)
         {
             FileAttributes attributes = File.GetAttributes(saveDirectory);
@@ -429,7 +465,7 @@ public class BPSaveDataReader : MonoBehaviour
         return null;
     }
 
-    private void SetSaveDirectory(string newSaveDirectory)
+    public void SetSaveDirectory(string newSaveDirectory)
     {
         if (String.IsNullOrEmpty(newSaveDirectory))
         {
@@ -446,8 +482,17 @@ public class BPSaveDataReader : MonoBehaviour
 
         if (saveFileWatcher != null)
         {
-            saveFileWatcher.Path = savePath;
+            saveFileWatcher.Path = saveDirectory;
         }
+
+        saveDirectoryField.text = saveDirectory;
+        Debug.Log("Set save directory to " + saveDirectory);
+    }
+
+    public void ResetSaveDirectory()
+    {
+        string defaultSaveDirectory = GetSaveDirectory();
+        SetSaveDirectory(defaultSaveDirectory);
     }
 
     // Want to explain why I'm using threading stuff here:
@@ -455,12 +500,21 @@ public class BPSaveDataReader : MonoBehaviour
     // Because Unity runs things on a single thread, this would mean that whenever we reloaded the save file, the tracker would lag the heck out for a second.
     // By doing all the save data reading on a thread, this means that the tracker can run on it's own smoothly and just update the UI once the thread has finished processing the save file.
     // There might be a cleaner/safer way to do this, but this is what I came up with! Open to suggestions though.
-    private void StartProcessSaveThread()
+    public void StartProcessSaveThread()
     {
         Debug.Log("Started processing save");
 
         if (saveProcessingThread != null && saveProcessingThread.IsAlive)
         {
+            return;
+        }
+
+        if (!AutoToggle.isOn)
+        {
+            if (LoadingText)
+            {
+                LoadingText.SetActive(false);
+            }
             return;
         }
 
@@ -471,7 +525,7 @@ public class BPSaveDataReader : MonoBehaviour
     // When we pick a new save slot, we want to stop loading any old save data and start loading new data immediately.
     // Threads makes doing that a bit weird, so this is to try and immediately stop whatever save loading we are doing and start loading the new save after that.
     // This is a bit finnicky and causes some weird stuff to happen occasionally when switching slots, so I'm gonna try and find a better solution later.
-    private void ForceRestartProcessSave()
+    public void ForceRestartProcessSave()
     {
         if (saveProcessingThread != null && saveProcessingThread.IsAlive)
         {
@@ -504,6 +558,10 @@ public class BPSaveDataReader : MonoBehaviour
     // Should avoid calling this on a main thread anywhere when possible, will lag out the tracker for a few seconds.
     private void ProcessSave()
     {
+        if (String.IsNullOrEmpty(savePath))
+        {
+            return;
+        }
         // Small delay before we process the save, in case this was triggered by an update to the save file - let the game finish writing to it.
         Thread.Sleep(300);
 
@@ -596,6 +654,7 @@ public class BPSaveDataReader : MonoBehaviour
         finally
         {
             saveFile.Dispose();
+            Debug.Log("Save File processing finished!");
         }
     }
 
