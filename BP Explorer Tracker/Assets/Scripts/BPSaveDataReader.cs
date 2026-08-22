@@ -33,6 +33,7 @@ public class BPSaveDataReader : MonoBehaviour
 {
     // Serialized fields
     public Toggle AutoToggle;
+    public Toggle GamepassToggle;
     public GameObject LoadingText;
     public TMP_InputField saveDirectoryField;
 
@@ -59,7 +60,9 @@ public class BPSaveDataReader : MonoBehaviour
     private static readonly string[] DEFAULT_SAVE_DIRS = {
         System.Environment.GetEnvironmentVariable("USERPROFILE") + "/AppData/LocalLow/Dogubomb/BLUE PRINCE/storage",
         "~/Library/Application Support/com.Dogubomb.BluePrince/storage",
-        "~/.config/unity3d/Dogubomb/BLUE PRINCE/storage"
+        "~/.config/unity3d/Dogubomb/BLUE PRINCE/storage",
+        System.Environment.GetEnvironmentVariable("USERPROFILE") + "AppData/Local/Packages/RawFury.BluePrince_9s0pnehqffj7t/SystemAppData/wgs/000901F39906ACFA_0000000000000000000000007D0295B9\\C0E8BF09D7A746458CBD6649D24C79DFI",
+
     };
 
     private static readonly string SAVE_FILENAME = "MtHollyBlueprint.es3";
@@ -152,6 +155,7 @@ public class BPSaveDataReader : MonoBehaviour
 
     private static readonly string DECRYPTION_KEY_STRING = "D#vnrl%TI_9q0euFPIx+wKRuNx%Aja2-AtuH1jtMSk2k%H1jXjUPor08QaeQE=p5l=LAIWaSYms-68SYVS0PPoWxgM1B8?8tirM+UGr=cp!5a3=B5tBsKYEUfqxN!H9DvRVkLW?6cMeZWxgov%OOXmfl9zRiqWPsXq95lEc4yax7hqf5m_i5ssn-OGgLA8LJu2ETibBi7DwLc-zQ4M9jRGIdV_izS_J_=3FA=rAo0HUiEr-HWYVnuK$OQUyaVMchXxf%EBo3A7Z-PXYm$6PPG%fJfWzV7M$L5he#y5cb?kVR67IfGzG$UzBcLhNMDhQFwQSEX59ZG7hP32q?6PgirmvGTd-45+7ZKyG$FrDHoNw7ceUhrxYdzYSHd0yRz0T_RR_R5$GZda%DDfCUPHIaVlIhMq4FEOzo?GL7wyXr9XD7SD_QGpjZh&NDwycjnBeOy2mmFazlOV5eR7jsiwYDde9jCOH&cOxeTody=iUEt|l7JCQ8IyX|0g3H&NO6DMveVqC9|OPkOZpO3DpM|||3LJ7PX40rZJXmLILu0UXU9hpM5";
 
+    private static readonly string GAMEPASS_DECRYPTION_KEY_STRING = "swansong";
 
     // Various consts for reading the save file 
     private Dictionary<string, int> ROOM_NAME_TO_ID = new Dictionary<string, int> {
@@ -664,7 +668,15 @@ public class BPSaveDataReader : MonoBehaviour
 
     private byte[] DeriveKey(byte[] salt)
     {
-        byte[] password = Encoding.UTF8.GetBytes(DECRYPTION_KEY_STRING);
+        byte[] password;
+        if (GamepassToggle.isOn)
+        {
+            password = Encoding.UTF8.GetBytes(GAMEPASS_DECRYPTION_KEY_STRING);
+        }
+        else
+        {
+            password = Encoding.UTF8.GetBytes(DECRYPTION_KEY_STRING);
+        }
 
         using var pbkdf2 = new Rfc2898DeriveBytes(
             password,

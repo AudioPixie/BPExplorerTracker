@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class SaveManager : MonoBehaviour
 {
     public Toggle autoToggle;
+    public Toggle gamePassToggle;
     public BPSaveDataReader saveDataReader;
     public TMP_InputField bgColor;
     public TMP_Dropdown saveFileSelect;
@@ -46,30 +47,35 @@ public class SaveManager : MonoBehaviour
             autoToggle.isOn = (PlayerPrefs.GetInt("Auto On") != 0);
         if (PlayerPrefs.HasKey("BG Color")) //background color
             bgColor.text = (PlayerPrefs.GetString("BG Color"));
-        if (PlayerPrefs.HasKey("File Path")) //save data file path
+        if (PlayerPrefs.HasKey("Save File Path")) //save data file path
             saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("File Path"));
         if (PlayerPrefs.HasKey("Save Slot"))
         {
             saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
             saveDataReader.SetSaveSlot(saveFileSelect);
         }
-
+        if (PlayerPrefs.HasKey("Gamepass On")) //gamepass toggle
+            gamePassToggle.isOn = (PlayerPrefs.GetInt("Gamepass On") != 0);
     }
 
     public void Save()
     {
         PlayerPrefs.SetInt("Auto On", (autoToggle.isOn ? 1: 0));
-        PlayerPrefs.SetString("File Path", saveDataReader.SaveDirectory);
+        PlayerPrefs.SetString("Save File Path", saveDataReader.SaveDirectory);
         PlayerPrefs.SetString("BG Color", bgColor.text);
         PlayerPrefs.SetInt("Save Slot", saveFileSelect.value);
+        PlayerPrefs.SetInt("Gamepass On", (gamePassToggle.isOn ? 1: 0));
+
     }
 
     public void Load()
     {
         autoToggle.isOn = (PlayerPrefs.GetInt("Auto On") != 0);
-        saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("File Path"));
+        saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("Save File Path"));
         bgColor.text = (PlayerPrefs.GetString("BG Color"));
         saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
         saveDataReader.SetSaveSlot(saveFileSelect);
+        gamePassToggle.isOn = (PlayerPrefs.GetInt("Gamepass On") != 0);
+
     }
 }
