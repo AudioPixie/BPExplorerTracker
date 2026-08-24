@@ -392,8 +392,6 @@ public class BPSaveDataReader : MonoBehaviour
             LoadingText.SetActive(false);
         }
 
-        if (events.bools == null) { return; }
-
         BoolEntry room46 = events.bools.Find(x => x.key == "Room 46 Reached");
         Room46Object.GetComponent<RoomItem>().Update46(room46.value);
 
@@ -916,6 +914,8 @@ public class BPSaveDataReader : MonoBehaviour
     private AllEvents ParseSlotFields(string savePlainText, string saveSlot)
     {
         AllEvents Results = new AllEvents();
+        Results.bools = new List<BoolEntry>();
+        Results.ints = new List<IntEntry>();
 
         MatchCollection slotMatches = SLOT_RE.Matches(savePlainText);
         foreach(Match slotMatch in slotMatches)
@@ -956,6 +956,31 @@ public class BPSaveDataReader : MonoBehaviour
 
             Results = slotFields;
             break;
+        }
+
+        // If we don't find any save data for the bool entries or int entries, put in default values of false/0 for everything
+        // So that the tracker properly resets when the save slot is cleared.
+        foreach (string boolKey in EVENTS_BOOLS)
+        {
+            BoolEntry boolEntry = Results.bools.Find(x => x.key == boolKey);
+            if (boolEntry == null)
+            {
+                boolEntry = new BoolEntry();
+                boolEntry.key = boolKey;
+                boolEntry.value = false; // Assuming that the default value for each is false, which is the case with our current list of bool events.
+                Results.bools.Add(boolEntry);
+            }
+        }
+        foreach (string intKey in EVENTS_INTS)
+        {
+            IntEntry intEntry = Results.ints.Find(x => x.key == intKey);
+            if (intEntry == null)
+            {
+                intEntry = new IntEntry();
+                intEntry.key = intKey;
+                intEntry.value = 0; // Assuming that the default value for each is false, which is the case with our current list of bool events.
+                Results.ints.Add(intEntry);
+            }
         }
 
         return Results;
