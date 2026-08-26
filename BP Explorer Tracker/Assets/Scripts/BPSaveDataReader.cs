@@ -13,12 +13,20 @@ using System.Threading;
 public class RoomEntry
 {
     public int roomId;
-    public int globalDrafts;
-    public int todayDrafts;
+    public int globalDrafts = 0;
+    public int todayDrafts = 0;
 }
 
-[System.Serializable] public class BoolEntry   { public string key; public bool value; }
-[System.Serializable] public class IntEntry    { public string key; public int value; }
+[System.Serializable] public class BoolEntry  
+{ 
+    public string key = "";
+    public bool value = false; 
+}
+[System.Serializable] public class IntEntry   
+{ 
+    public string key = "";
+    public int value = 0; 
+}
 
 [System.Serializable]
 public class AllEvents
@@ -337,6 +345,7 @@ public class BPSaveDataReader : MonoBehaviour
     private string savePlainText = "";
     private string saveSlotToLoad = "BluePrint";
 
+    private BPSave saveData = new BPSave();
     private AllEvents events = new AllEvents();
     private List<RoomEntry> roomRecords = new List<RoomEntry>();
     private Thread saveProcessingThread;
@@ -451,7 +460,12 @@ public class BPSaveDataReader : MonoBehaviour
     {
         saveSlotToLoad = SAVE_SLOTS[saveSlot.value];
         Debug.Log("Save slot set to " + saveSlotToLoad);
-        ForceRestartProcessSave();
+        
+        // Instead of fully reloading the whole save file, just used the last decrypted save data again, and just look for a different slot.
+        events = GetSlotEvents(saveData, saveSlotToLoad);
+        roomRecords = GetRoomRecords(saveData, saveSlotToLoad);
+
+        shouldReloadData = true;
     }
 
     public string GetSaveDirectory()
@@ -519,6 +533,8 @@ public class BPSaveDataReader : MonoBehaviour
             }
             return;
         }
+
+        LoadingText.SetActive(true);
 
         saveProcessingThread = new Thread(ProcessSave);
         saveProcessingThread.Start();
@@ -646,9 +662,12 @@ public class BPSaveDataReader : MonoBehaviour
             savePlainText = Encoding.UTF8.GetString(outBuffer, 0, plaintextLength);
             //LogSavefile(savePlainText);
 
+            // Convert the save plain text into a save data file, so we can read whatever we want from it.
+            saveData = BPSaveParser.Parse(savePlainText);
+
             // From the save data, get the specific events we are looking for and the room draft counts - for only the save slot we care about.
-            events = ParseSlotFields(savePlainText, saveSlotToLoad);
-            roomRecords = ParseRoomRecords(savePlainText, saveSlotToLoad);
+            events = GetSlotEvents(saveData, saveSlotToLoad);
+            roomRecords = GetRoomRecords(saveData, saveSlotToLoad);
 
             // Setting this bool lets the main Unity thread know that we are done loading the save data, and can reload the tracker again.
             shouldReloadData = true;
@@ -911,76 +930,47 @@ public class BPSaveDataReader : MonoBehaviour
 
     // This is reading through the save file and finding all the events we care about.
     // It uses Regex to find all the fields we need.
-    private AllEvents ParseSlotFields(string savePlainText, string saveSlot)
+    private AllEvents GetSlotEvents(BPSave saveData, string saveSlot)
     {
         AllEvents Results = new AllEvents();
         Results.bools = new List<BoolEntry>();
         Results.ints = new List<IntEntry>();
 
-        MatchCollection slotMatches = SLOT_RE.Matches(savePlainText);
-        foreach(Match slotMatch in slotMatches)
-        {
-            string slotKey = slotMatch.Groups[1].Value;
-            if (slotKey != saveSlot)
-            {
-                continue;
-            }
+        SaveSlot slot = saveData.GetSaveSlot(saveSlot);
 
-            AllEvents slotFields = new AllEvents();
-            slotFields.bools = new List<BoolEntry>();
-            slotFields.ints = new List<IntEntry>();
-            MatchCollection fieldMatches = FIELD_RE.Matches(slotMatch.Groups[2].Value);
-            foreach(Match fieldMatch in fieldMatches)
-            {
-                string key = fieldMatch.Groups[1].Value;
-                string type = fieldMatch.Groups[2].Value ;
-                string value = fieldMatch.Groups[3].Value.Trim();
-
-                if (EVENTS_BOOLS.Contains(key))
-                {
-                    BoolEntry boolEntry = new BoolEntry();
-                    boolEntry.key = key;
-                    boolEntry.value = bool.Parse(value);
-                    slotFields.bools.Add(boolEntry);
-                    //Debug.Log(slotKey + ": bool \"" + key + "\" is " + value);
-                }
-                else if (EVENTS_INTS.Contains(key))
-                {
-                    IntEntry intEntry = new IntEntry();
-                    intEntry.key = key;
-                    intEntry.value = Int32.Parse(value);
-                    slotFields.ints.Add(intEntry);
-                    //Debug.Log(slotKey + ": int \"" + key + "\" is " + value);
-                }
-            }
-
-            Results = slotFields;
-            break;
-        }
-
-        // If we don't find any save data for the bool entries or int entries, put in default values of false/0 for everything
-        // So that the tracker properly resets when the save slot is cleared.
         foreach (string boolKey in EVENTS_BOOLS)
         {
-            BoolEntry boolEntry = Results.bools.Find(x => x.key == boolKey);
-            if (boolEntry == null)
+            BoolEntry boolEntry = new BoolEntry();
+            boolEntry.key = boolKey;
+
+            if (slot != null)
             {
-                boolEntry = new BoolEntry();
-                boolEntry.key = boolKey;
-                boolEntry.value = false; // Assuming that the default value for each is false, which is the case with our current list of bool events.
-                Results.bools.Add(boolEntry);
+                SaveSlotField field = slot.GetSaveField(boolKey);
+                if (field != null)
+                {
+                    boolEntry.value = (bool)field.Value;
+                }
             }
+            
+            Results.bools.Add(boolEntry);
         }
+
+
         foreach (string intKey in EVENTS_INTS)
         {
-            IntEntry intEntry = Results.ints.Find(x => x.key == intKey);
-            if (intEntry == null)
+            IntEntry intEntry = new IntEntry();
+            intEntry.key = intKey;
+
+            if (slot != null)
             {
-                intEntry = new IntEntry();
-                intEntry.key = intKey;
-                intEntry.value = 0; // Assuming that the default value for each is false, which is the case with our current list of bool events.
-                Results.ints.Add(intEntry);
+                SaveSlotField field = slot.GetSaveField(intKey);
+                if (field != null)
+                {
+                    intEntry.value = (int)field.Value;
+                }
             }
+            
+            Results.ints.Add(intEntry);
         }
 
         return Results;
@@ -988,60 +978,34 @@ public class BPSaveDataReader : MonoBehaviour
 
     // This is reading through the save file and getting the amount of times each room was drafted.
     // It uses Regex to find all the fields we need.
-    private List<RoomEntry> ParseRoomRecords(string savePlainText, string saveSlot)
+    private List<RoomEntry> GetRoomRecords(BPSave saveData, string saveSlot)
     {
         List<RoomEntry> Results = new List<RoomEntry>();
 
-        string slotPattern = Regex.Escape($"\"{saveSlot}\"") + @".*?""arrays""\s*:\s*\{(.*?)\},\s*""obj""";
-
-        List<RoomEntry> saveSlotRooms = new List<RoomEntry>();
-
-        Match match = Regex.Match(savePlainText, slotPattern, RegexOptions.Singleline);
-
-        if (match.Success)
+        SaveSlot slot = saveData.GetSaveSlot(saveSlot);
+        
+        if (slot != null)
         {
-            var arrays = new Dictionary<string, List<(string Type, string Value)>>();
+            SaveSlotArray roomKeysArray = slot.GetSaveArray("RoomRecords Keys");
+            List<string> roomKeys = roomKeysArray.GetStringArray();
 
-            foreach (Match arrayMatch in ARRAY_BLOCK_RE.Matches(match.Groups[1].Value))
-            {
-                string name = arrayMatch.Groups[1].Value;
-                var values = new List<(string Type, string Value)>();
+            SaveSlotArray roomValuesArray = slot.GetSaveArray("RoomRecords Values");
+            List<int> roomValues = roomValuesArray.GetIntArray();
 
-                foreach (Match vm in ARRAY_VALUE_RE.Matches(arrayMatch.Groups[2].Value))
-                {
-                    string type = vm.Groups[1].Value;
-                    string value = vm.Groups[2].Value.Trim().Trim('"');
-
-                    values.Add((type, value));
-                    //Debug.Log(name + ", " + type + ", " + value);
-                }
-
-                arrays[name] = values;
-            }
-
-            arrays.TryGetValue("RoomRecords Keys", out var keysArr);
-            arrays.TryGetValue("RoomRecords Values", out var valuesArr);
-
-            keysArr ??= new List<(string Type, string Value)>();
-            valuesArr ??= new List<(string Type, string Value)>();
-
-            int count = Math.Min(keysArr.Count, valuesArr.Count);
+            int count = Math.Min(roomKeys.Count, roomValues.Count);
 
             for (int i = 0; i < count; i++)
             {
-                string roomName = keysArr[i].Value;
-                string countStr = valuesArr[i].Value;
+                string roomName = roomKeys[i];
+                int roomCount = roomValues[i];
 
                 if (ROOM_NAME_TO_ID.ContainsKey(roomName))
                 {
                     RoomEntry room = new RoomEntry();
                     room.roomId = ROOM_NAME_TO_ID[roomName];
-                    if (Int32.TryParse(countStr, out int roomCount))
-                    {
-                        room.globalDrafts = roomCount;
-                    }
-                    //Debug.Log(saveSlot + " room " + roomName + ": Drafted " + room.globalDrafts + " times.");
-                    saveSlotRooms.Add(room);
+                    room.globalDrafts = roomCount;
+
+                    Results.Add(room);
                 }
             }
         }
@@ -1054,11 +1018,9 @@ public class BPSaveDataReader : MonoBehaviour
             {
                 RoomEntry room = new RoomEntry();
                 room.roomId = roomEntry.Value;
-                saveSlotRooms.Add(room);
+                Results.Add(room);
             }
         }
-
-        Results = saveSlotRooms;
 
         return Results;
     }
