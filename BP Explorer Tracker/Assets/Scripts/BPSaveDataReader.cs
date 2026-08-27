@@ -44,7 +44,9 @@ public class BPSaveDataReader : MonoBehaviour
     public Toggle GamepassToggle;
     public GameObject LoadingText;
     public TMP_InputField saveDirectoryField;
+    public RoomCarousel roomCarousel;
 
+    [Header("Specific Room Objects")]
     public GameObject Room46Object;
     public GameObject PlanetariumObject;
     public GameObject ConservatoryObject;
@@ -303,6 +305,7 @@ public class BPSaveDataReader : MonoBehaviour
 
     private List<string> EVENTS_INTS = new List<string> {
         "Chess Power",
+        "DAY",
     };
 
     private List<string> SAVE_SLOTS = new List<string> {
@@ -350,6 +353,7 @@ public class BPSaveDataReader : MonoBehaviour
     private List<RoomEntry> roomRecords = new List<RoomEntry>();
     private Thread saveProcessingThread;
     private bool shouldReloadData = false;
+    private bool queueLoadingText = true;
 
     FileSystemWatcher saveFileWatcher;
 
@@ -367,6 +371,12 @@ public class BPSaveDataReader : MonoBehaviour
 
     void Update()
     {
+        if (queueLoadingText)
+        {
+            LoadingText.SetActive(true);
+            queueLoadingText = false;
+        }
+
         // Check if the save file loading thread is done and we should update the UI.
         if (shouldReloadData)
         {
@@ -454,6 +464,9 @@ public class BPSaveDataReader : MonoBehaviour
 
         IntEntry currentChess = events.ints.Find(x => x.key == "Chess Power");
         ChessObject.GetComponent<KeyChess>().ChangeSprite(currentChess.value);
+
+        IntEntry currentDay = events.ints.Find(x => x.key == "DAY");
+        roomCarousel.QueueNewDayTile(currentDay.value);
     }
 
     public void SetSaveSlot(TMP_Dropdown saveSlot)
@@ -522,6 +535,7 @@ public class BPSaveDataReader : MonoBehaviour
 
         if (saveProcessingThread != null && saveProcessingThread.IsAlive)
         {
+            Debug.Log("Save processing thread is running: " + saveProcessingThread.ThreadState);
             return;
         }
 
@@ -531,10 +545,12 @@ public class BPSaveDataReader : MonoBehaviour
             {
                 LoadingText.SetActive(false);
             }
+            Debug.Log("...but Auto toggle is off!");
+
             return;
         }
 
-        LoadingText.SetActive(true);
+        queueLoadingText = true;
 
         saveProcessingThread = new Thread(ProcessSave);
         saveProcessingThread.Start();

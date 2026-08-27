@@ -16390,6 +16390,7 @@ MonoBehaviour:
   GamepassToggle: {fileID: 902646785}
   LoadingText: {fileID: 1993637003}
   saveDirectoryField: {fileID: 795787784}
+  roomCarousel: {fileID: 1945765008}
   Room46Object: {fileID: 1250042922}
   PlanetariumObject: {fileID: 1463314130}
   ConservatoryObject: {fileID: 1399177203}
@@ -17718,6 +17719,7 @@ MonoBehaviour:
   tileWidth: 120
   padding: 20
   roomGrid: {fileID: 1978136210}
+  newDayTile: {fileID: 3483625204394221351, guid: 59387aebde220fd40a319821a9c1f575, type: 3}
 --- !u!1001 &1949662522
 PrefabInstance:
   m_ObjectHideFlags: 0
