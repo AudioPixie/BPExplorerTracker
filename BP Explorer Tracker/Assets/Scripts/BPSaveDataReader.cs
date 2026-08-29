@@ -599,6 +599,16 @@ public class BPSaveDataReader : MonoBehaviour
         // Small delay before we process the save, in case this was triggered by an update to the save file - let the game finish writing to it.
         Thread.Sleep(300);
 
+        // For gamepass specifically, try and update the save path to point at the largest file in the directory.
+        if (GamepassToggle.isOn)
+        {
+            string gamepassSavePath = GetGamepassSavePath(saveDirectory);
+            if (gamepassSavePath != null)
+            {
+                savePath = gamepassSavePath;
+            }
+        }
+
         // Create a file stream to read the save file - make sure to specify the FileShare ReadWrite, 
         // so that we don't prevent the game from being able to read and write to it as well
         FileStream saveFile = new FileStream(savePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
@@ -1051,5 +1061,35 @@ public class BPSaveDataReader : MonoBehaviour
         {
             outputFile.Write(savePlainText);
         }
+    }
+
+    // Gamepass helper function to theoretically find the save file we are looking for, which should be the largetst one in the directory
+    public string GetGamepassSavePath(string gamepassSaveDirectory)
+    {
+        if (string.IsNullOrEmpty(gamepassSaveDirectory))
+        {
+            return null;
+        }
+
+        DirectoryInfo folderInfo = new DirectoryInfo(gamepassSaveDirectory);
+        FileInfo[] files = folderInfo.GetFiles();
+
+        long largestSize = 0;
+        FileInfo largestFile = null;
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            if (files[i].Length > largestSize)
+            {
+                largestSize = files[i].Length;
+                largestFile = files[i];
+            }
+        }
+
+        if (largestFile != null)
+        {
+            return gamepassSaveDirectory + "/" + largestFile.Name;
+        }
+        return null;
     }
 }
