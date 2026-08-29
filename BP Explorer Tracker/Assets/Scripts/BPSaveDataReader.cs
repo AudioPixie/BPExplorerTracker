@@ -577,7 +577,6 @@ public class BPSaveDataReader : MonoBehaviour
         }
         saveFileWatcher.Path = saveDirectory;
         saveFileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-        saveFileWatcher.Filter = SAVE_FILENAME;
         saveFileWatcher.Changed += OnSaveFileUpdated;
         saveFileWatcher.Created += OnSaveFileUpdated;
         saveFileWatcher.Deleted += OnSaveFileUpdated;
