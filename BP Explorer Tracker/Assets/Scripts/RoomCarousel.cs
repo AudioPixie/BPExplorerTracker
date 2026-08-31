@@ -128,6 +128,13 @@ public class RoomCarousel : MonoBehaviour
 
     public void QueueNewDayTile(int day)
     {
+        // Only update when we move to a new day! This prevents two 'day one's spawning at the start of a run, first when clearing the save data and second when starting the run,
+        // and also prevents it constantly spawning for gamepass which reloads the save every 10 seconds.
+        if (dayNumber == day)
+        {
+            return;
+        }
+        
         dayNumber = day;
         queuedNewDayTile = true;
     }

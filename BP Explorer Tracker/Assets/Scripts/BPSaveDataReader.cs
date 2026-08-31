@@ -357,6 +357,8 @@ public class BPSaveDataReader : MonoBehaviour
 
     FileSystemWatcher saveFileWatcher;
 
+    private float GamepassReloadTimer = 0f;
+
     void Start()
     {
         if (String.IsNullOrEmpty(savePath))
@@ -382,6 +384,16 @@ public class BPSaveDataReader : MonoBehaviour
         {
             LoadData();
             shouldReloadData = false;
+        }
+
+        if (GamepassToggle.isOn)
+        {
+            GamepassReloadTimer += Time.deltaTime;
+            if (GamepassReloadTimer >= 10f)
+            {
+                GamepassReloadTimer = 0f;
+                StartProcessSaveThread();
+            }
         }
     }
 
@@ -577,6 +589,7 @@ public class BPSaveDataReader : MonoBehaviour
         }
         saveFileWatcher.Path = saveDirectory;
         saveFileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+        saveFileWatcher.Filter = SAVE_FILENAME;
         saveFileWatcher.Changed += OnSaveFileUpdated;
         saveFileWatcher.Created += OnSaveFileUpdated;
         saveFileWatcher.Deleted += OnSaveFileUpdated;
