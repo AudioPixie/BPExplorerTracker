@@ -3675,6 +3675,7 @@ MonoBehaviour:
   saveDataReader: {fileID: 1779961392}
   bgColor: {fileID: 1061589262}
   saveFileSelect: {fileID: 1436832174}
+  RoomGrid: {fileID: 1978136209}
 --- !u!4 &358047739
 Transform:
   m_ObjectHideFlags: 0
@@ -12804,9 +12805,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1269104242}
-        m_TargetAssemblyTypeName: RunReset, Assembly-CSharp
-        m_MethodName: ResetTracker
+      - m_Target: {fileID: 358047738}
+        m_TargetAssemblyTypeName: SaveManager, Assembly-CSharp
+        m_MethodName: DeleteManualDefault
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14230,9 +14231,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1386849848}
-        m_TargetAssemblyTypeName: RunReset, Assembly-CSharp
-        m_MethodName: ResetTracker
+      - m_Target: {fileID: 358047738}
+        m_TargetAssemblyTypeName: SaveManager, Assembly-CSharp
+        m_MethodName: SaveManualDefault
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -22,22 +22,30 @@ public class RunReset : MonoBehaviour
                         RoomItem roomItem = child3.GetComponent<RoomItem>();
                         Image image = child3.GetComponent<Image>();
                         Toggle toggle = child3.GetComponent<Toggle>();
-
-                        if (roomItem.offSprite != null)
+                        
+                        if (PlayerPrefs.HasKey("DefaultRoomState_1"))
                         {
-                            image.sprite = roomItem.offSprite;
+                            SaveManager.Instance.LoadManualDefault();
+                        }
+                        else // if no default saved, turns everything on except entrance hall and antechamber
+                        {
+                            if (roomItem.offSprite != null)
+                            {
+                                image.sprite = roomItem.offSprite;
+                            }
+                            
+                            if (roomItem.roomId == 2 || roomItem.roomId == 45)
+                            {
+                                toggle.isOn = false;
+                                roomItem.MatchToggle();
+                            }
+                            else
+                            {
+                                toggle.isOn = true;
+                                roomItem.MatchToggle();
+                            }
                         }
                         
-                        if (roomItem.roomId == 1 || roomItem.roomId == 45)
-                        {
-                            toggle.isOn = false;
-                            roomItem.MatchToggle();
-                        }
-                        else
-                        {
-                            toggle.isOn = true;
-                            roomItem.MatchToggle();
-                        }
                     }
                 }
             }

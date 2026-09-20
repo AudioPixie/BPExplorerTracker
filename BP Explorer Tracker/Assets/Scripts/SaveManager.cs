@@ -9,6 +9,7 @@ public class SaveManager : MonoBehaviour
     public BPSaveDataReader saveDataReader;
     public TMP_InputField bgColor;
     public TMP_Dropdown saveFileSelect;
+    public GameObject RoomGrid;
 
     private static SaveManager instance;
 
@@ -58,24 +59,94 @@ public class SaveManager : MonoBehaviour
             gamePassToggle.isOn = (PlayerPrefs.GetInt("Gamepass On") != 0);
     }
 
-    public void Save()
+    public void SaveSettings()
     {
-        PlayerPrefs.SetInt("Auto On", (autoToggle.isOn ? 1: 0));
+        PlayerPrefs.SetInt("Auto On", autoToggle.isOn ? 1: 0);
         PlayerPrefs.SetString("Save File Path", saveDataReader.SaveDirectory);
         PlayerPrefs.SetString("BG Color", bgColor.text);
         PlayerPrefs.SetInt("Save Slot", saveFileSelect.value);
-        PlayerPrefs.SetInt("Gamepass On", (gamePassToggle.isOn ? 1: 0));
+        PlayerPrefs.SetInt("Gamepass On", gamePassToggle.isOn ? 1: 0);
 
     }
 
-    public void Load()
+    public void LoadSettings()
     {
-        autoToggle.isOn = (PlayerPrefs.GetInt("Auto On") != 0);
+        autoToggle.isOn = PlayerPrefs.GetInt("Auto On") != 0;
         saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("Save File Path"));
-        bgColor.text = (PlayerPrefs.GetString("BG Color"));
+        bgColor.text = PlayerPrefs.GetString("BG Color");
         saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
         saveDataReader.SetSaveSlot(saveFileSelect);
-        gamePassToggle.isOn = (PlayerPrefs.GetInt("Gamepass On") != 0);
+        gamePassToggle.isOn = PlayerPrefs.GetInt("Gamepass On") != 0;
 
+    }
+
+    public void SaveManualDefault()
+    {
+        foreach (Transform child1 in RoomGrid.transform)
+        {
+            foreach (Transform child2 in child1.transform)
+            {
+                foreach (Transform child3 in child2.transform)
+                {
+                    RoomItem roomItem = child3.GetComponent<RoomItem>();
+                    Toggle toggle = child3.GetComponent<Toggle>();
+
+                    PlayerPrefs.SetInt("DefaultRoomState_" + roomItem.roomId, toggle.isOn ? 1: 0);
+
+                    if (roomItem.offSprite != null)
+                    {
+                        PlayerPrefs.SetInt("DefaultRoomAdded_" + roomItem.roomId, roomItem.image.sprite == roomItem.onSprite ? 1: 0);
+                    }
+                }
+            }
+        }
+    }
+
+    public void LoadManualDefault()
+    {
+        foreach (Transform child1 in RoomGrid.transform)
+        {
+            foreach (Transform child2 in child1.transform)
+            {
+                foreach (Transform child3 in child2.transform)
+                {
+                    RoomItem roomItem = child3.GetComponent<RoomItem>();
+                    Toggle toggle = child3.GetComponent<Toggle>();
+
+                    toggle.isOn = PlayerPrefs.GetInt("DefaultRoomState_" + roomItem.roomId) != 0;
+
+                    if (roomItem.offSprite != null)
+                    {
+                        if (PlayerPrefs.GetInt("DefaultRoomAdded_" + roomItem.roomId) != 0)
+                        {
+                            roomItem.image.sprite = roomItem.onSprite;
+                        }
+                        else
+                        {
+                            roomItem.image.sprite = roomItem.offSprite;
+                        }
+                    }
+
+                    roomItem.MatchToggle();
+                }
+            }
+        }
+    }
+
+    public void DeleteManualDefault()
+    {
+        foreach (Transform child1 in RoomGrid.transform)
+        {
+            foreach (Transform child2 in child1.transform)
+            {
+                foreach (Transform child3 in child2.transform)
+                {
+                    RoomItem roomItem = child3.GetComponent<RoomItem>();
+                    PlayerPrefs.DeleteKey("DefaultRoomState_" + roomItem.roomId);
+                    if (roomItem.offSprite != null)
+                        PlayerPrefs.DeleteKey("DefaultRoomAdded_" + roomItem.roomId);
+                }
+            }
+        }
     }
 }
