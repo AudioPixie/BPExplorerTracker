@@ -13,6 +13,10 @@ public class SaveManager : MonoBehaviour
     public GameObject RoomGrid;
     public Button RunResetButton;
 
+    public Toggle CounterToggle;
+    public Toggle ChessToggle;
+    public Toggle Room46Toggle;
+
     public bool isLoading;
 
     private static SaveManager instance;
@@ -74,6 +78,9 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetString("BG Color", bgColor.text);
             PlayerPrefs.SetInt("Save Slot", saveFileSelect.value);
             PlayerPrefs.SetInt("Gamepass On", gamePassToggle.isOn ? 1: 0);
+            PlayerPrefs.SetInt("Counter On", CounterToggle.isOn ? 1: 0);
+            PlayerPrefs.SetInt("Chess On", ChessToggle.isOn ? 1: 0);
+            PlayerPrefs.SetInt("Room46 On", Room46Toggle.isOn ? 1: 0);
         }
     }
 
@@ -86,6 +93,9 @@ public class SaveManager : MonoBehaviour
         saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
         saveDataReader.SetSaveSlot(saveFileSelect);
         gamePassToggle.isOn = PlayerPrefs.GetInt("Gamepass On") != 0;
+        CounterToggle.isOn = PlayerPrefs.GetInt("Counter On") != 0;
+        ChessToggle.isOn = PlayerPrefs.GetInt("Chess On") != 0;
+        Room46Toggle.isOn = PlayerPrefs.GetInt("Room46 On") != 0;
     }
 
     public void SaveManualDefault()

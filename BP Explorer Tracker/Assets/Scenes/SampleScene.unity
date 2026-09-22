@@ -3983,6 +3983,9 @@ MonoBehaviour:
   saveFileSelect: {fileID: 1436832174}
   RoomGrid: {fileID: 1978136209}
   RunResetButton: {fileID: 509422729}
+  CounterToggle: {fileID: 2045225182}
+  ChessToggle: {fileID: 261328477}
+  Room46Toggle: {fileID: 428484156}
   isLoading: 0
 --- !u!4 &358047739
 Transform:
