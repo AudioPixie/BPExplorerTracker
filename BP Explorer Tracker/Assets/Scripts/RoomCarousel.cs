@@ -29,10 +29,13 @@ public class RoomCarousel : MonoBehaviour
         allToggles = roomGrid.GetComponentsInChildren<Toggle>();
     }
 
-    float SpawnX => ((RectTransform)rootCanvas.transform).rect.width - 280f;
+    public GameObject KeyPanel;
+    
+    float SpawnX => ((RectTransform)rootCanvas.transform).rect.width - (KeyPanel.GetComponent<RectTransform>().rect.width / 2f);
 
     void Update()
     {
+        Debug.Log("SpawnX: " + SpawnX);
         RectTransform rightmost = null;
         List<RectTransform> toDestroy = new List<RectTransform>();
 
