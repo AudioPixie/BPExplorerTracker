@@ -20,7 +20,7 @@ public class RunReset : MonoBehaviour
             }
             else
             {
-                // Debug.Log("No default template found. Resetting to default state.");
+                Debug.Log("No default template");
                 foreach (Transform child1 in RoomGrid.transform)
                 {
                     foreach (Transform child2 in child1.transform)
@@ -33,7 +33,6 @@ public class RunReset : MonoBehaviour
                                 Image image = child3.GetComponent<Image>();
                                 Toggle toggle = child3.GetComponent<Toggle>();
                                 
-                                Debug.Log("No default template");
                                 if (roomItem.offSprite != null)
                                 {
                                     image.sprite = roomItem.offSprite;

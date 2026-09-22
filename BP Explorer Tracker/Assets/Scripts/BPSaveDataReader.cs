@@ -45,6 +45,7 @@ public class BPSaveDataReader : MonoBehaviour
     public GameObject LoadingText;
     public TMP_InputField saveDirectoryField;
     public RoomCarousel roomCarousel;
+    public TMP_Text dayCounter;
 
     [Header("Specific Room Objects")]
     public GameObject Room46Object;
@@ -482,6 +483,8 @@ public class BPSaveDataReader : MonoBehaviour
 
         IntEntry currentDay = events.ints.Find(x => x.key == "DAY");
         roomCarousel.QueueNewDayTile(currentDay.value);
+        int tempDayValue = currentDay.value + 1;
+        dayCounter.text = " Day " + tempDayValue.ToString();
     }
 
     public void SetSaveSlot(TMP_Dropdown saveSlot)

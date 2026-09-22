@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9e05234382c4eb647be4f18d51c92225
+guid: 974bde5cb3834cc4bbec9b36b3a82c79
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1027076954706823283
-    second: Blank Blueprint_0
+      213: 5603747399137913577
+    second: KeyPanel2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -84,19 +84,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -111,6 +98,19 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -178,23 +178,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Blank Blueprint_0
+      name: KeyPanel2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 512
-        height: 512
+        width: 1174
+        height: 612
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3784a427c09e04e00800000000000000
-      internalID: 1027076954706823283
+      spriteID: 9ea62a0d19284cd40800000000000000
+      internalID: 5603747399137913577
       vertices: []
       indices: 
       edges: []
@@ -203,7 +203,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4128da823be07714d905512fe4ea839a
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -213,7 +213,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Blank Blueprint_0: 1027076954706823283
+      KeyPanel2_0: 5603747399137913577
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

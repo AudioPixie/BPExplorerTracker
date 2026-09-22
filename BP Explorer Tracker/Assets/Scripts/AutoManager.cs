@@ -17,10 +17,15 @@ public class AutoManager : MonoBehaviour
     public Button saveTemplate;
     public Button resetTemplate;
 
+    public GameObject PanelDayText;
+    public GameObject PanelRoomsLarge;
+    public GameObject PanelRoomsSmall;
+
     private void Awake()
     {
         toggle = GetComponent<Toggle>();
         SettingsInteractable(toggle.isOn);
+        PanelDisplay(toggle.isOn);
     }
 
     public void RoomButtonsInteractable(bool autoOn)
@@ -50,5 +55,13 @@ public class AutoManager : MonoBehaviour
         manualResetRun.interactable = !autoOn;
         saveTemplate.interactable = !autoOn;
         resetTemplate.interactable = !autoOn;
+    }
+
+    public void PanelDisplay(bool autoOn)
+    {
+        PanelDayText.SetActive(autoOn);
+        PanelRoomsSmall.SetActive(autoOn);
+
+        PanelRoomsLarge.SetActive(!autoOn);
     }
 }
