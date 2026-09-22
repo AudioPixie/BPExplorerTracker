@@ -115,6 +115,7 @@ public class RoomCarousel : MonoBehaviour
             checkedCount++;
 
             if (item != null 
+                && item.isActiveAndEnabled
                 && toggle != null
                 && toggle.isOn
                 && item.roomId != 2

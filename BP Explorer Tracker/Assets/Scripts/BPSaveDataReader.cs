@@ -373,26 +373,29 @@ public class BPSaveDataReader : MonoBehaviour
 
     void Update()
     {
-        if (queueLoadingText)
-        {
-            LoadingText.SetActive(true);
-            queueLoadingText = false;
-        }
-
-        // Check if the save file loading thread is done and we should update the UI.
-        if (shouldReloadData)
-        {
-            LoadData();
-            shouldReloadData = false;
-        }
-
-        if (GamepassToggle.isOn)
-        {
-            GamepassReloadTimer += Time.deltaTime;
-            if (GamepassReloadTimer >= 10f)
+        if (AutoToggle.isOn) // added this since it was still triggering in manual mode on start, so couldn't load save template
             {
-                GamepassReloadTimer = 0f;
-                StartProcessSaveThread();
+            if (queueLoadingText)
+            {
+                LoadingText.SetActive(true);
+                queueLoadingText = false;
+            }
+
+            // Check if the save file loading thread is done and we should update the UI.
+            if (shouldReloadData)
+            {
+                LoadData();
+                shouldReloadData = false;
+            }
+
+            if (GamepassToggle.isOn)
+            {
+                GamepassReloadTimer += Time.deltaTime;
+                if (GamepassReloadTimer >= 10f)
+                {
+                    GamepassReloadTimer = 0f;
+                    StartProcessSaveThread();
+                }
             }
         }
     }

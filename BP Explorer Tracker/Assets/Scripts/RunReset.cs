@@ -11,41 +11,46 @@ public class RunReset : MonoBehaviour
     
     public void ResetTracker()
     {
+        //Debug.Log("Resetting tracker...");
         if (!AutoToggle.isOn)
         {
-            foreach (Transform child1 in RoomGrid.transform)
+            if (PlayerPrefs.HasKey("DefaultRoomState_1"))
             {
-                foreach (Transform child2 in child1.transform)
+                SaveManager.Instance.LoadManualDefault();
+            }
+            else
+            {
+                // Debug.Log("No default template found. Resetting to default state.");
+                foreach (Transform child1 in RoomGrid.transform)
                 {
-                    foreach (Transform child3 in child2.transform)
+                    foreach (Transform child2 in child1.transform)
                     {
-                        RoomItem roomItem = child3.GetComponent<RoomItem>();
-                        Image image = child3.GetComponent<Image>();
-                        Toggle toggle = child3.GetComponent<Toggle>();
-                        
-                        if (PlayerPrefs.HasKey("DefaultRoomState_1"))
+                        foreach (Transform child3 in child2.transform)
                         {
-                            SaveManager.Instance.LoadManualDefault();
+                            if (child3.name != "ArchivedRoom")
+                            {
+                                RoomItem roomItem = child3.GetComponent<RoomItem>();
+                                Image image = child3.GetComponent<Image>();
+                                Toggle toggle = child3.GetComponent<Toggle>();
+                                
+                                Debug.Log("No default template");
+                                if (roomItem.offSprite != null)
+                                {
+                                    image.sprite = roomItem.offSprite;
+                                }
+                                
+                                if (roomItem.roomId == 2 || roomItem.roomId == 45)
+                                {
+                                    toggle.isOn = false;
+                                    roomItem.MatchToggle();
+                                }
+                                else
+                                {
+                                    toggle.isOn = true;
+                                    roomItem.MatchToggle();
+                                }
+                            }
                         }
-                        else // if no default saved, turns everything on except entrance hall and antechamber
-                        {
-                            if (roomItem.offSprite != null)
-                            {
-                                image.sprite = roomItem.offSprite;
-                            }
-                            
-                            if (roomItem.roomId == 2 || roomItem.roomId == 45)
-                            {
-                                toggle.isOn = false;
-                                roomItem.MatchToggle();
-                            }
-                            else
-                            {
-                                toggle.isOn = true;
-                                roomItem.MatchToggle();
-                            }
-                        }
-                        
                     }
                 }
             }

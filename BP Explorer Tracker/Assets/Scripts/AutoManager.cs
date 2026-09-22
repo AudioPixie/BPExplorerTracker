@@ -1,9 +1,27 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class AutoManager : MonoBehaviour
 {
+    private Toggle toggle;
     public GameObject RoomGrid;
+
+    public Toggle gamePassToggle;
+    public TMP_Dropdown saveFileSelect;
+    public Button forceReloadButton;
+    public TMP_InputField filePathInput;
+    public Button filePathApply;
+    public Button filePathReset;
+    public Button manualResetRun;
+    public Button saveTemplate;
+    public Button resetTemplate;
+
+    private void Awake()
+    {
+        toggle = GetComponent<Toggle>();
+        SettingsInteractable(toggle.isOn);
+    }
 
     public void RoomButtonsInteractable(bool autoOn)
     {
@@ -18,5 +36,19 @@ public class AutoManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SettingsInteractable(bool autoOn)
+    {
+        gamePassToggle.interactable = autoOn;
+        saveFileSelect.interactable = autoOn;
+        forceReloadButton.interactable = autoOn;
+        filePathInput.interactable = autoOn;
+        filePathApply.interactable = autoOn;
+        filePathReset.interactable = autoOn;
+
+        manualResetRun.interactable = !autoOn;
+        saveTemplate.interactable = !autoOn;
+        resetTemplate.interactable = !autoOn;
     }
 }

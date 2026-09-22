@@ -4,12 +4,16 @@ using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour
 {
+    public Toggle jrToggle;
     public Toggle autoToggle;
     public Toggle gamePassToggle;
     public BPSaveDataReader saveDataReader;
     public TMP_InputField bgColor;
     public TMP_Dropdown saveFileSelect;
     public GameObject RoomGrid;
+    public Button RunResetButton;
+
+    public bool isLoading;
 
     private static SaveManager instance;
 
@@ -43,41 +47,45 @@ public class SaveManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // Moved this to happen on awake so that it can set the save directory before the BPSaveDataReader would try to find the initial path
-        if (PlayerPrefs.HasKey("Auto On")) //automatic tracking toggle
-            autoToggle.isOn = (PlayerPrefs.GetInt("Auto On") != 0);
-        if (PlayerPrefs.HasKey("BG Color")) //background color
-            bgColor.text = (PlayerPrefs.GetString("BG Color"));
+        isLoading = true;
+
         if (PlayerPrefs.HasKey("Save File Path")) //save data file path
-            saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("File Path"));
-        if (PlayerPrefs.HasKey("Save Slot"))
         {
-            saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
-            saveDataReader.SetSaveSlot(saveFileSelect);
+            saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("Save File Path"));
         }
-        if (PlayerPrefs.HasKey("Gamepass On")) //gamepass toggle
-            gamePassToggle.isOn = (PlayerPrefs.GetInt("Gamepass On") != 0);
+
+        LoadSettings();
+        
+        isLoading = false;
+    }
+
+    private void Start()
+    {
+        RunResetButton.onClick.Invoke();
     }
 
     public void SaveSettings()
     {
-        PlayerPrefs.SetInt("Auto On", autoToggle.isOn ? 1: 0);
-        PlayerPrefs.SetString("Save File Path", saveDataReader.SaveDirectory);
-        PlayerPrefs.SetString("BG Color", bgColor.text);
-        PlayerPrefs.SetInt("Save Slot", saveFileSelect.value);
-        PlayerPrefs.SetInt("Gamepass On", gamePassToggle.isOn ? 1: 0);
-
+        if (isLoading == false)
+        {
+            PlayerPrefs.SetInt("Jr On", jrToggle.isOn ? 1: 0);
+            PlayerPrefs.SetInt("Auto On", autoToggle.isOn ? 1: 0);
+            PlayerPrefs.SetString("Save File Path", saveDataReader.SaveDirectory);
+            PlayerPrefs.SetString("BG Color", bgColor.text);
+            PlayerPrefs.SetInt("Save Slot", saveFileSelect.value);
+            PlayerPrefs.SetInt("Gamepass On", gamePassToggle.isOn ? 1: 0);
+        }
     }
 
     public void LoadSettings()
     {
+        jrToggle.isOn = PlayerPrefs.GetInt("Jr On") != 0;
         autoToggle.isOn = PlayerPrefs.GetInt("Auto On") != 0;
         saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("Save File Path"));
         bgColor.text = PlayerPrefs.GetString("BG Color");
         saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
         saveDataReader.SetSaveSlot(saveFileSelect);
         gamePassToggle.isOn = PlayerPrefs.GetInt("Gamepass On") != 0;
-
     }
 
     public void SaveManualDefault()
@@ -88,14 +96,17 @@ public class SaveManager : MonoBehaviour
             {
                 foreach (Transform child3 in child2.transform)
                 {
-                    RoomItem roomItem = child3.GetComponent<RoomItem>();
-                    Toggle toggle = child3.GetComponent<Toggle>();
-
-                    PlayerPrefs.SetInt("DefaultRoomState_" + roomItem.roomId, toggle.isOn ? 1: 0);
-
-                    if (roomItem.offSprite != null)
+                    if (child3.name != "ArchivedRoom")
                     {
-                        PlayerPrefs.SetInt("DefaultRoomAdded_" + roomItem.roomId, roomItem.image.sprite == roomItem.onSprite ? 1: 0);
+                        RoomItem roomItem = child3.GetComponent<RoomItem>();
+                        Toggle toggle = child3.GetComponent<Toggle>();
+
+                        PlayerPrefs.SetInt("DefaultRoomState_" + roomItem.roomId, toggle.isOn ? 1: 0);
+
+                        if (roomItem.offSprite != null)
+                        {
+                            PlayerPrefs.SetInt("DefaultRoomAdded_" + roomItem.roomId, roomItem.image.sprite == roomItem.onSprite ? 1: 0);
+                        }
                     }
                 }
             }
@@ -110,24 +121,29 @@ public class SaveManager : MonoBehaviour
             {
                 foreach (Transform child3 in child2.transform)
                 {
-                    RoomItem roomItem = child3.GetComponent<RoomItem>();
-                    Toggle toggle = child3.GetComponent<Toggle>();
-
-                    toggle.isOn = PlayerPrefs.GetInt("DefaultRoomState_" + roomItem.roomId) != 0;
-
-                    if (roomItem.offSprite != null)
+                    if (child3.name != "ArchivedRoom")
                     {
-                        if (PlayerPrefs.GetInt("DefaultRoomAdded_" + roomItem.roomId) != 0)
-                        {
-                            roomItem.image.sprite = roomItem.onSprite;
-                        }
-                        else
-                        {
-                            roomItem.image.sprite = roomItem.offSprite;
-                        }
-                    }
+                        RoomItem roomItem = child3.GetComponent<RoomItem>();
+                        Toggle toggle = child3.GetComponent<Toggle>();
 
-                    roomItem.MatchToggle();
+                        toggle.isOn = PlayerPrefs.GetInt("DefaultRoomState_" + roomItem.roomId) != 0;
+                        // Debug.Log("Room ID: " + roomItem.roomId + " - Changed toggle to: " + PlayerPrefs.GetInt("DefaultRoomState_" + roomItem.roomId));
+
+                        if (roomItem.offSprite != null)
+                        {
+                            if (PlayerPrefs.GetInt("DefaultRoomAdded_" + roomItem.roomId) != 0)
+                            {
+                                roomItem.image.sprite = roomItem.onSprite;
+                            }
+                            else
+                            {
+                                roomItem.image.sprite = roomItem.offSprite;
+                            }
+                        }
+
+                        roomItem.MatchToggle();
+                        // Debug.Log("Room ID: " + roomItem.roomId + " - Final state: " + toggle.isOn + ", sprite: " + roomItem.image.sprite.name);
+                    }
                 }
             }
         }
@@ -141,10 +157,13 @@ public class SaveManager : MonoBehaviour
             {
                 foreach (Transform child3 in child2.transform)
                 {
-                    RoomItem roomItem = child3.GetComponent<RoomItem>();
-                    PlayerPrefs.DeleteKey("DefaultRoomState_" + roomItem.roomId);
-                    if (roomItem.offSprite != null)
-                        PlayerPrefs.DeleteKey("DefaultRoomAdded_" + roomItem.roomId);
+                    if (child3.name != "ArchivedRoom")
+                    {
+                        RoomItem roomItem = child3.GetComponent<RoomItem>();
+                        PlayerPrefs.DeleteKey("DefaultRoomState_" + roomItem.roomId);
+                        if (roomItem.offSprite != null)
+                            PlayerPrefs.DeleteKey("DefaultRoomAdded_" + roomItem.roomId);
+                    }
                 }
             }
         }
