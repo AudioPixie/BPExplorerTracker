@@ -6,16 +6,16 @@ using UnityEngine.EventSystems;
 public class PathChanger : MonoBehaviour
 {
     public TMP_InputField inputField;
-    public JSONImporter jsonImporter;
+    public BPSaveDataReader saveDataReader;
 
     public void InputToPath()
     {
-        jsonImporter.UpdatePath(inputField.text);
+        saveDataReader.SetSaveDirectory(inputField.text);
     }
 
     public void ResetPath()
     {
-        jsonImporter.UpdatePath("C:/Program Files (x86)/Steam/steamapps/common/Blue Prince");
+        saveDataReader.ResetSaveDirectory();
     }
 
     public void ClearSelection()

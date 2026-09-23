@@ -64,6 +64,14 @@ public class RoomItem : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void ForceUpdateData(RoomEntry newData)
+    {
+        zeroCycleCount = 0;
+        pendingResetData = null;
+        data = newData;
+        OnDataUpdated();
+    }
+
     private void OnDataUpdated()
     {
         //Debug.Log($"{data.roomId}: {data.globalDrafts} global, {data.todayDrafts} today");
