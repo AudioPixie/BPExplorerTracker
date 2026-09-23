@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bb73e7979c3806d4eaabf905d95d71b4
+guid: bbde1247b17200d4db0a660c7a5ffb3d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1556032642726754767
-    second: Chess_Knight_0
+      213: -2792182500710869773
+    second: Chess_Bishop_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -178,13 +178,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Chess_Knight_0
+      name: Chess_Bishop_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 562
-        height: 557
+        height: 562
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,8 +193,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fc9f3a0c173289510800000000000000
-      internalID: 1556032642726754767
+      spriteID: 3f411192fcc2049d0800000000000000
+      internalID: -2792182500710869773
       vertices: []
       indices: 
       edges: []
@@ -203,7 +203,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5041a241f4dbec045b94c3bae142acbd
+    spriteID: aa5a4ee955f5cb74581fb2e1e8e2ffaf
     internalID: 0
     vertices: []
     indices: 
@@ -213,7 +213,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Chess_Knight_0: 1556032642726754767
+      Chess_Bishop_0: -2792182500710869773
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 8b9c713485b6d86408e93a55521ed254
+guid: 8daa17544040f2043aebb99f703c0228
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4675998200523556085
-    second: KeyPanel3_0
+      213: 6584433616542020549
+    second: update-icon_0
+  - first:
+      213: -4025371561627495584
+    second: update-icon_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -178,13 +181,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KeyPanel3_0
+      name: update-icon_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1736
-        height: 612
+        y: 42
+        width: 93
+        height: 54
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,8 +196,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0b7d6f39648b1fb0800000000000000
-      internalID: -4675998200523556085
+      spriteID: 5c3b0290d7b906b50800000000000000
+      internalID: 6584433616542020549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: update-icon_1
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 0
+        width: 92
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 063db3c54e10328c0800000000000000
+      internalID: -4025371561627495584
       vertices: []
       indices: 
       edges: []
@@ -213,7 +238,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      KeyPanel3_0: -4675998200523556085
+      update-icon_0: 6584433616542020549
+      update-icon_1: -4025371561627495584
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

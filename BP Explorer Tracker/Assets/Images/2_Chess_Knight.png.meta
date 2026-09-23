@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ac82fe362d2922b49937d877c1a95a8b
+guid: bb73e7979c3806d4eaabf905d95d71b4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4061972963619418656
-    second: Chess_Pawn_0
+      213: 1556032642726754767
+    second: Chess_Knight_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -178,13 +178,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Chess_Pawn_0
+      name: Chess_Knight_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 562
-        height: 562
+        height: 557
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,8 +193,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0ed49306c19f0a7c0800000000000000
-      internalID: -4061972963619418656
+      spriteID: fc9f3a0c173289510800000000000000
+      internalID: 1556032642726754767
       vertices: []
       indices: 
       edges: []
@@ -203,7 +203,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 62b1c77d84ee940499cd861ee5e2ced6
+    spriteID: 5041a241f4dbec045b94c3bae142acbd
     internalID: 0
     vertices: []
     indices: 
@@ -213,7 +213,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Chess_Pawn_0: -4061972963619418656
+      Chess_Knight_0: 1556032642726754767
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
