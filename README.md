@@ -1,28 +1,32 @@
 # BPExplorerTracker
-### An automatic tracker for Blue Prince Explorer% runs
+### An automatic tracker for Blue Prince Explorer% and Jr. Explorer% runs
 
 Go to [Releases](https://github.com/AudioPixie/BPExplorerTracker/releases) to download the latest build
 
-## Autotracking setup
+Thank you to CJTree and Bacowl for major contributions to this project!
 
-**NOTE: Autotracking is currently incompatible with MacOSX**
+## Manual Mode
 
-All builds come bundled with a compatible MelonLoader mod for autotracking hooking. After installing MelonLoader and running the game once so it can create the necessary directories, place ExplorerTrackerHook.dll in your mods folder. Assuming your filepath is the default one steam uses, this should be located at `C:/Program Files (x86)/Steam/steamapps/common/Blue Prince/Mods`.
+In the settings panel, the tracker can be used manually by unchecking Automatic. 
 
-In the tracker, the default filepath will point at `C:/Program Files (x86)/Steam/steamapps/common/Blue Prince` for the json files the mod creates.
+### Controls:
 
-[Mod Repo to view source code](https://github.com/AudioPixie/ExplorerTrackerHook)
-
-## To uninstall
-
-If you would like to uninstall the mod, run the MelonLoader setup app (the same one you used to install) and follow the uninstall prompts. The mod generates two json files that will still be present in your game directory - `drafts.json` and `events.json` - that must be deleted manually. Note that they are just text files that do nothing on their own and are harmless to leave there.
-
-## Manual Control
-
-With Automatic unchecked, the tracker can be used manually. Icons can be clicked to turn them on and off, and the Found Floorplans and Studio Additions pages can be right-clicked to toggle greyscale. There is a Reset Run button present for manual tracking. The chess icon can be left or right clicked to cycle through the pieces.
+- Left-Click rooms to turn them on/off
+- Found Floorplans and Studio Additions: Right-Click to toggle greyscale
+- Chess icon: Left-click and Right-Click to cycle pieces
+- Settings > Reset Run: Resets progress to default. If no user template is present, all rooms are turned on except Entrance Hall and Antechamber.
+- Settings > Save as Default: Creates user template that 'Reset Run' will revert to
+- Settings > Delete Default: Deletes user template
 
 ## Suggested OBS Setup
 
 To remove the background, it is suggested to leave the background black `#000000` and add a Luma Key as a filter with the following settings:
 
 <img width="581" height="188" alt="Screenshot 2026-06-21 235255" src="https://github.com/user-attachments/assets/31355ad6-75d2-4ab0-b5db-776e30100f32" />
+
+
+## Useful links
+
+Autotracking now works natively within the tracker and no longer uses MelonLoader. If you would still like to see the original mod it can be found here:
+
+[Mod Repo to view source code](https://github.com/AudioPixie/ExplorerTrackerHook)
