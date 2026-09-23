@@ -35,7 +35,6 @@ public class RoomCarousel : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("SpawnX: " + SpawnX);
         RectTransform rightmost = null;
         List<RectTransform> toDestroy = new List<RectTransform>();
 
