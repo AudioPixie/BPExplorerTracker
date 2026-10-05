@@ -68,13 +68,29 @@ public class BPSaveDataReader : MonoBehaviour
     public GameObject ChessObject;
 
     // Const values
-    private static readonly string[] DEFAULT_SAVE_DIRS = {
-        System.Environment.GetEnvironmentVariable("USERPROFILE") + "/AppData/LocalLow/Dogubomb/BLUE PRINCE/storage",
-        "~/Library/Application Support/com.Dogubomb.BluePrince/storage",
-        "~/.config/unity3d/Dogubomb/BLUE PRINCE/storage",
-        System.Environment.GetEnvironmentVariable("USERPROFILE") + "AppData/Local/Packages/RawFury.BluePrince_9s0pnehqffj7t/SystemAppData/wgs/000901F39906ACFA_0000000000000000000000007D0295B9\\C0E8BF09D7A746458CBD6649D24C79DFI",
+    // Built from the real home folder: .NET never expands "~", and USERPROFILE doesn't exist on Mac/Linux.
+    private static readonly string[] DEFAULT_SAVE_DIRS = BuildDefaultSaveDirs();
 
-    };
+    private static string HomeDir()
+    {
+        string home = null;
+        try { home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); } catch { }
+        if (String.IsNullOrEmpty(home)) home = Environment.GetEnvironmentVariable("HOME");
+        if (String.IsNullOrEmpty(home)) home = Environment.GetEnvironmentVariable("USERPROFILE");
+        return home ?? "";
+    }
+
+    private static string[] BuildDefaultSaveDirs()
+    {
+        string home = HomeDir();
+        return new string[] {
+            Path.Combine(home, "AppData/LocalLow/Dogubomb/BLUE PRINCE/storage"),
+            Path.Combine(home, "Library/Application Support/com.Dogubomb.BluePrince/storage"),
+            Path.Combine(home, "Library/Application Support/Dogubomb/BLUE PRINCE/storage"),
+            Path.Combine(home, ".config/unity3d/Dogubomb/BLUE PRINCE/storage"),
+            Path.Combine(home, "AppData/Local/Packages/RawFury.BluePrince_9s0pnehqffj7t/SystemAppData/wgs/000901F39906ACFA_0000000000000000000000007D0295B9\\C0E8BF09D7A746458CBD6649D24C79DFI"),
+        };
+    }
 
     private static readonly string SAVE_FILENAME = "MtHollyBlueprint.es3";
 
@@ -360,6 +376,12 @@ public class BPSaveDataReader : MonoBehaviour
 
     private float GamepassReloadTimer = 0f;
 
+    // Change detection: set from the watcher thread or the poller, handled on the main thread in Update().
+    private volatile bool pendingReload = false;
+    private float pollTimer = 0f;
+    private long lastSeenTicks = 0;
+    private long lastSeenLength = -1;
+
     void Start()
     {
         if (String.IsNullOrEmpty(savePath))
@@ -395,10 +417,50 @@ public class BPSaveDataReader : MonoBehaviour
                 if (GamepassReloadTimer >= 10f)
                 {
                     GamepassReloadTimer = 0f;
-                    StartProcessSaveThread();
+                    pendingReload = true;
                 }
             }
+            else
+            {
+                // FileSystemWatcher doesn't reliably fire on macOS (and misses some save patterns elsewhere),
+                // so also check the save file's timestamp/size once a second. It's a cheap metadata read.
+                pollTimer += Time.deltaTime;
+                if (pollTimer >= 1f)
+                {
+                    pollTimer = 0f;
+                    PollSaveFile();
+                }
+            }
+
+            // If a load is already running, keep the flag set and reload again once it finishes,
+            // instead of dropping the change.
+            if (pendingReload && (saveProcessingThread == null || !saveProcessingThread.IsAlive))
+            {
+                pendingReload = false;
+                StartProcessSaveThread();
+            }
         }
+    }
+
+    private void PollSaveFile()
+    {
+        try
+        {
+            if (String.IsNullOrEmpty(savePath) || !File.Exists(savePath))
+            {
+                return;
+            }
+            FileInfo info = new FileInfo(savePath);
+            long ticks = info.LastWriteTimeUtc.Ticks;
+            long length = info.Length;
+            if (ticks != lastSeenTicks || length != lastSeenLength)
+            {
+                lastSeenTicks = ticks;
+                lastSeenLength = length;
+                pendingReload = true;
+            }
+        }
+        catch { }
     }
 
     void OnDestroy()
@@ -408,6 +470,7 @@ public class BPSaveDataReader : MonoBehaviour
             saveFileWatcher.Changed -= OnSaveFileUpdated;
             saveFileWatcher.Created -= OnSaveFileUpdated;
             saveFileWatcher.Deleted -= OnSaveFileUpdated;
+            saveFileWatcher.Renamed -= OnSaveFileUpdated;
             saveFileWatcher.Dispose();
         }
     }
@@ -501,38 +564,75 @@ public class BPSaveDataReader : MonoBehaviour
 
     public string GetSaveDirectory()
     {
-        foreach(string saveDirectory in DEFAULT_SAVE_DIRS)
+        // File.GetAttributes throws on a missing path, which used to abort Start() before the
+        // watcher was created or the first load ran. Directory.Exists just returns false.
+        foreach (string defaultDirectory in DEFAULT_SAVE_DIRS)
         {
-            FileAttributes attributes = File.GetAttributes(saveDirectory);
-            if (attributes > 0)
+            try
             {
-                return saveDirectory;
+                if (Directory.Exists(defaultDirectory))
+                {
+                    return defaultDirectory;
+                }
             }
+            catch { }
         }
         return null;
     }
 
+    // Cleans up a typed/pasted path: surrounding quotes/whitespace, "~", Terminal-style escaped spaces,
+    // a trailing slash, or the save file itself instead of its folder.
+    public static string ExpandPath(string path)
+    {
+        if (path == null)
+        {
+            return null;
+        }
+        path = path.Trim().Trim('"', '\'').Trim();
+        if (Path.DirectorySeparatorChar == '/')
+        {
+            path = path.Replace("\\ ", " ");
+        }
+        if (path == "~" || path.StartsWith("~/") || path.StartsWith("~\\"))
+        {
+            path = HomeDir() + path.Substring(1);
+        }
+        if (path.EndsWith(SAVE_FILENAME, StringComparison.OrdinalIgnoreCase))
+        {
+            path = Path.GetDirectoryName(path) ?? path;
+        }
+        if (path.Length > 1)
+        {
+            path = path.TrimEnd('/', '\\');
+        }
+        return path;
+    }
+
     public void SetSaveDirectory(string newSaveDirectory)
     {
+        newSaveDirectory = ExpandPath(newSaveDirectory);
         if (String.IsNullOrEmpty(newSaveDirectory))
         {
             Debug.Log("No save directory found");
             return;
         }
         saveDirectory = newSaveDirectory;
-        savePath = newSaveDirectory + "/" + SAVE_FILENAME;
+        savePath = Path.Combine(saveDirectory, SAVE_FILENAME);
+
+        // Make the poller treat the new location as changed, so Apply loads it right away.
+        lastSeenTicks = 0;
+        lastSeenLength = -1;
+
+        saveDirectoryField.text = saveDirectory;
+
         if (!File.Exists(savePath))
         {
-            Debug.Log("No save found");
+            Debug.Log("No save found at " + savePath);
             return;
         }
 
-        if (saveFileWatcher != null)
-        {
-            saveFileWatcher.Path = saveDirectory;
-        }
-
-        saveDirectoryField.text = saveDirectory;
+        // The watcher may not exist yet (e.g. Start() never got that far), so create or retarget it here.
+        CreateSaveFileWatcher();
         Debug.Log("Set save directory to " + saveDirectory);
     }
 
@@ -589,33 +689,64 @@ public class BPSaveDataReader : MonoBehaviour
     // Instead of repeatedly checking the save file, we can just set up a watcher to look at the save file and see when it's updated - then re-process the save file then.
     private void CreateSaveFileWatcher()
     {
-        if (saveFileWatcher == null)
+        try
         {
-            saveFileWatcher = new FileSystemWatcher();
+            if (String.IsNullOrEmpty(saveDirectory) || !Directory.Exists(saveDirectory))
+            {
+                return;
+            }
+
+            // Only create and subscribe once; this can be called again when the path changes.
+            if (saveFileWatcher == null)
+            {
+                saveFileWatcher = new FileSystemWatcher();
+                // No LastAccess: our own reads of the save would otherwise count as changes.
+                saveFileWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size;
+                saveFileWatcher.Filter = SAVE_FILENAME;
+                saveFileWatcher.Changed += OnSaveFileUpdated;
+                saveFileWatcher.Created += OnSaveFileUpdated;
+                saveFileWatcher.Deleted += OnSaveFileUpdated;
+                saveFileWatcher.Renamed += OnSaveFileUpdated; // saves written to a temp file then renamed
+            }
+            saveFileWatcher.EnableRaisingEvents = false;
+            saveFileWatcher.Path = saveDirectory;
+            saveFileWatcher.EnableRaisingEvents = true;
         }
-        saveFileWatcher.Path = saveDirectory;
-        saveFileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-        saveFileWatcher.Filter = SAVE_FILENAME;
-        saveFileWatcher.Changed += OnSaveFileUpdated;
-        saveFileWatcher.Created += OnSaveFileUpdated;
-        saveFileWatcher.Deleted += OnSaveFileUpdated;
-        saveFileWatcher.EnableRaisingEvents = true;
+        catch (Exception e)
+        {
+            Debug.LogWarning("File watcher unavailable, relying on polling: " + e.Message);
+        }
     }
 
+    // Runs on the watcher's own thread, so only set a flag; Update() starts the reload on the main thread.
     private void OnSaveFileUpdated(object sender, FileSystemEventArgs e)
     {
-        StartProcessSaveThread();
+        pendingReload = true;
+    }
+
+    // Thread entry point. An exception escaping a background thread would otherwise kill it silently.
+    private void ProcessSave()
+    {
+        try
+        {
+            ProcessSaveCore();
+        }
+        catch (ThreadAbortException) { }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Save processing failed: " + e.Message);
+        }
     }
 
     // Should avoid calling this on a main thread anywhere when possible, will lag out the tracker for a few seconds.
-    private void ProcessSave()
+    private void ProcessSaveCore()
     {
         if (String.IsNullOrEmpty(savePath))
         {
             return;
         }
         // Small delay before we process the save, in case this was triggered by an update to the save file - let the game finish writing to it.
-        Thread.Sleep(300);
+        Thread.Sleep(1000);
 
         // For gamepass specifically, try and update the save path to point at the largest file in the directory.
         if (GamepassToggle.isOn)
