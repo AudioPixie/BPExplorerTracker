@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class RoomCarousel : MonoBehaviour
 {
@@ -9,10 +10,15 @@ public class RoomCarousel : MonoBehaviour
     public float padding = 20f;
     public Transform roomGrid;
 
+    public GameObject newDayTile;
+
     private List<RectTransform> tiles = new List<RectTransform>();
     private int roomIndex = 0;
     private RoomItem[] allRooms;
     private Toggle[] allToggles;
+
+    private bool queuedNewDayTile = false;
+    private int dayNumber = 0;
 
     Canvas rootCanvas;
 
@@ -21,11 +27,11 @@ public class RoomCarousel : MonoBehaviour
         rootCanvas = GetComponentInParent<Canvas>().rootCanvas;
         allRooms = roomGrid.GetComponentsInChildren<RoomItem>();
         allToggles = roomGrid.GetComponentsInChildren<Toggle>();
-        
-        SpawnTile();
     }
 
-    float SpawnX => ((RectTransform)rootCanvas.transform).rect.width - 280f;
+    public GameObject KeyPanel;
+    
+    float SpawnX => ((RectTransform)rootCanvas.transform).rect.width - (KeyPanel.GetComponent<RectTransform>().rect.width / 2f);
 
     void Update()
     {
@@ -56,10 +62,35 @@ public class RoomCarousel : MonoBehaviour
 
     void SpawnTile()
     {
-        Sprite sprite = GetNextUndraftedSprite();
-        if (sprite == null) return;
+        GameObject tile;
+        if (queuedNewDayTile)
+        {
+            tile = Instantiate(newDayTile);
+            tile.transform.SetParent(transform, false);
+            TMP_Text newDayText = tile.GetComponentInChildren<TMP_Text>();
+            if (newDayText)
+            {
+                if (dayNumber == 0)
+                {
+                    newDayText.text = "Day One";
+                }
+                else
+                {
+                    // For whatever reason, the day number in the save data is one less than the day number in game.
+                    newDayText.text = "Day " + (dayNumber + 1);
+                }
+            }
+            queuedNewDayTile = false;
+        }
+        else
+        {
+            Sprite sprite = GetNextUndraftedSprite();
+            if (sprite == null) return;
 
-        GameObject tile = new GameObject("Tile", typeof(RectTransform), typeof(Image));
+            tile = new GameObject("Tile", typeof(RectTransform), typeof(Image));
+            tile.GetComponent<Image>().sprite = sprite;
+        }
+
         tile.transform.SetParent(transform, false);
 
         RectTransform rt = tile.GetComponent<RectTransform>();
@@ -69,7 +100,6 @@ public class RoomCarousel : MonoBehaviour
         rt.sizeDelta = new Vector2(tileWidth, tileWidth);
         rt.anchoredPosition = new Vector2(SpawnX, 0);
 
-        tile.GetComponent<Image>().sprite = sprite;
         tiles.Add(rt);
     }
 
@@ -87,6 +117,7 @@ public class RoomCarousel : MonoBehaviour
             checkedCount++;
 
             if (item != null 
+                && item.isActiveAndEnabled
                 && toggle != null
                 && toggle.isOn
                 && item.roomId != 2
@@ -98,4 +129,16 @@ public class RoomCarousel : MonoBehaviour
         return null;
     }
 
+    public void QueueNewDayTile(int day)
+    {
+        // Only update when we move to a new day! This prevents two 'day one's spawning at the start of a run, first when clearing the save data and second when starting the run,
+        // and also prevents it constantly spawning for gamepass which reloads the save every 10 seconds.
+        if (dayNumber == day)
+        {
+            return;
+        }
+        
+        dayNumber = day;
+        queuedNewDayTile = true;
+    }
 }

@@ -10,13 +10,14 @@ public class RoomItem : MonoBehaviour, IPointerClickHandler
     private RoomCarousel carousel;
 
     private Toggle toggle;
-    private Image image;
+    public Image image;
 
     public int roomId;
     public int totalDrafts;
 
     private RoomEntry data;
     
+    public bool isAddedToPool;
     public Sprite onSprite;
     public Sprite offSprite;
 
@@ -32,6 +33,7 @@ public class RoomItem : MonoBehaviour, IPointerClickHandler
         image = GetComponent<Image>();
         onSprite = GetComponent<Image>().sprite;
         image.color = new Color(1, 1, 1, 1f);
+        isAddedToPool = image.sprite ? image.sprite == onSprite : false;
     }
 
     public void UpdateData(RoomEntry newData)
@@ -64,6 +66,14 @@ public class RoomItem : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void ForceUpdateData(RoomEntry newData)
+    {
+        zeroCycleCount = 0;
+        pendingResetData = null;
+        data = newData;
+        OnDataUpdated();
+    }
+
     private void OnDataUpdated()
     {
         //Debug.Log($"{data.roomId}: {data.globalDrafts} global, {data.todayDrafts} today");
@@ -83,7 +93,6 @@ public class RoomItem : MonoBehaviour, IPointerClickHandler
             image.color = new Color(1, 1, 1, 1f);
             toggle.isOn = true;
         }
-
     }
 
     public void Update46(bool has46)

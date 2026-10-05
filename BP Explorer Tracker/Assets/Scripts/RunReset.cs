@@ -11,32 +11,44 @@ public class RunReset : MonoBehaviour
     
     public void ResetTracker()
     {
+        //Debug.Log("Resetting tracker...");
         if (!AutoToggle.isOn)
         {
-            foreach (Transform child1 in RoomGrid.transform)
+            if (PlayerPrefs.HasKey("DefaultRoomState_1"))
             {
-                foreach (Transform child2 in child1.transform)
+                SaveManager.Instance.LoadManualDefault();
+            }
+            else
+            {
+                Debug.Log("No default template");
+                foreach (Transform child1 in RoomGrid.transform)
                 {
-                    foreach (Transform child3 in child2.transform)
+                    foreach (Transform child2 in child1.transform)
                     {
-                        RoomItem roomItem = child3.GetComponent<RoomItem>();
-                        Image image = child3.GetComponent<Image>();
-                        Toggle toggle = child3.GetComponent<Toggle>();
-
-                        if (roomItem.offSprite != null)
+                        foreach (Transform child3 in child2.transform)
                         {
-                            image.sprite = roomItem.offSprite;
-                        }
-                        
-                        if (roomItem.roomId == 1 || roomItem.roomId == 45)
-                        {
-                            toggle.isOn = false;
-                            roomItem.MatchToggle();
-                        }
-                        else
-                        {
-                            toggle.isOn = true;
-                            roomItem.MatchToggle();
+                            if (child3.name != "ArchivedRoom")
+                            {
+                                RoomItem roomItem = child3.GetComponent<RoomItem>();
+                                Image image = child3.GetComponent<Image>();
+                                Toggle toggle = child3.GetComponent<Toggle>();
+                                
+                                if (roomItem.offSprite != null)
+                                {
+                                    image.sprite = roomItem.offSprite;
+                                }
+                                
+                                if (roomItem.roomId == 2 || roomItem.roomId == 45)
+                                {
+                                    toggle.isOn = false;
+                                    roomItem.MatchToggle();
+                                }
+                                else
+                                {
+                                    toggle.isOn = true;
+                                    roomItem.MatchToggle();
+                                }
+                            }
                         }
                     }
                 }
