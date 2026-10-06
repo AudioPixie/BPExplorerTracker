@@ -306,7 +306,7 @@ public class BPSaveDataReader : MonoBehaviour
         "Mechanarium Added",
         "Closed Exhibit Added",
         "Lost&Found Added",
-        "Throne Room Added",
+        "throne room tomorrow",
         "Treasure Trove Added",
         "Dovecote Added",
         "The Kennel Added",
@@ -511,7 +511,7 @@ public class BPSaveDataReader : MonoBehaviour
         BoolEntry addedLostAndFound = events.bools.Find(x => x.key == "Lost&Found Added");
         LostAndFoundObject.GetComponent<RoomItem>().UpdateAddedToPool(addedLostAndFound.value);
 
-        BoolEntry addedThroneRoom = events.bools.Find(x => x.key == "Throne Room Added");
+        BoolEntry addedThroneRoom = events.bools.Find(x => x.key == "throne room tomorrow");
         ThroneRoomObject.GetComponent<RoomItem>().UpdateAddedToPool(addedThroneRoom.value);
 
         BoolEntry addedTreasureTrove = events.bools.Find(x => x.key == "Treasure Trove Added");
