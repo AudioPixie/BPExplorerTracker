@@ -9,6 +9,8 @@ public class SaveManager : MonoBehaviour
     public Toggle gamePassToggle;
     public BPSaveDataReader saveDataReader;
     public TMP_InputField bgColor;
+    public Slider speedSlider;
+    public TMP_InputField speedInputField;
     public TMP_Dropdown saveFileSelect;
     public GameObject RoomGrid;
     public Button RunResetButton;
@@ -18,6 +20,15 @@ public class SaveManager : MonoBehaviour
     public Toggle Room46Toggle;
 
     public bool isLoading;
+
+    private int beltSpeed = 40;
+    public int BeltSpeed
+    {
+        get
+        {
+            return beltSpeed;
+        }
+    }
 
     private static SaveManager instance;
 
@@ -76,6 +87,7 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetInt("Auto On", autoToggle.isOn ? 1: 0);
             PlayerPrefs.SetString("Save File Path", saveDataReader.SaveDirectory);
             PlayerPrefs.SetString("BG Color", bgColor.text);
+            PlayerPrefs.SetInt("Belt Speed", beltSpeed);
             PlayerPrefs.SetInt("Save Slot", saveFileSelect.value);
             PlayerPrefs.SetInt("Gamepass On", gamePassToggle.isOn ? 1: 0);
             PlayerPrefs.SetInt("Counter On", CounterToggle.isOn ? 1: 0);
@@ -90,6 +102,13 @@ public class SaveManager : MonoBehaviour
         autoToggle.isOn = PlayerPrefs.GetInt("Auto On") != 0;
         saveDataReader.SetSaveDirectory(PlayerPrefs.GetString("Save File Path"));
         bgColor.text = PlayerPrefs.GetString("BG Color");
+        beltSpeed = PlayerPrefs.GetInt("Belt Speed");
+        if (beltSpeed == 0)
+        {
+            beltSpeed = 40; // if there's no speed set yet, default to 40
+        }
+        speedSlider.value = beltSpeed;
+        speedInputField.text = beltSpeed.ToString();
         saveFileSelect.value = PlayerPrefs.GetInt("Save Slot");
         saveDataReader.SetSaveSlot(saveFileSelect);
         gamePassToggle.isOn = PlayerPrefs.GetInt("Gamepass On") != 0;
@@ -176,6 +195,22 @@ public class SaveManager : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void OnSetBeltSpeedSlider()
+    {
+        beltSpeed = (int)speedSlider.value;
+        speedInputField.text = beltSpeed.ToString();
+    }
+
+    public void OnSetBeltSpeedTextField()
+    {
+        int newBeltSpeed;
+        if(int.TryParse(speedInputField.text, out newBeltSpeed))
+        {
+            beltSpeed = newBeltSpeed;
+            speedSlider.SetValueWithoutNotify(beltSpeed);
         }
     }
 }

@@ -41,7 +41,7 @@ public class RoomCarousel : MonoBehaviour
         foreach (RectTransform tile in tiles)
         {
             Vector2 pos = tile.anchoredPosition;
-            pos.x -= scrollSpeed * Time.deltaTime;
+            pos.x -= (float)SaveManager.Instance.BeltSpeed * Time.deltaTime;
             tile.anchoredPosition = pos;
 
             if (pos.x + tileWidth < 0)
