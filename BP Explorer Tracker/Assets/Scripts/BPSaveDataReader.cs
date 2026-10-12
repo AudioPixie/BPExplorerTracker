@@ -326,6 +326,7 @@ public class BPSaveDataReader : MonoBehaviour
     };
 
     private List<string> SAVE_SLOTS = new List<string> {
+        "Auto",
         "BluePrint",
         "BluePrint2",
         "BluePrint3",
@@ -556,10 +557,37 @@ public class BPSaveDataReader : MonoBehaviour
         Debug.Log("Save slot set to " + saveSlotToLoad);
         
         // Instead of fully reloading the whole save file, just used the last decrypted save data again, and just look for a different slot.
-        events = GetSlotEvents(saveData, saveSlotToLoad);
-        roomRecords = GetRoomRecords(saveData, saveSlotToLoad);
+        events = GetSlotEvents(saveData, GetSaveSlot());
+        roomRecords = GetRoomRecords(saveData, GetSaveSlot());
 
         shouldReloadData = true;
+    }
+
+    public string GetSaveSlot()
+    {
+        if (saveSlotToLoad == "Auto")
+        {
+            int currentSave = (int)(saveData.GetSaveSlot("CurrentSave").GetSaveField("current save").Value);
+            switch (currentSave)
+            {
+                case 2:
+                    return "BluePrint2";
+
+                case 3:
+                    return "BluePrint3";
+
+                case 4:
+                    return "BluePrint4";
+
+                case 1:
+                default:
+                    return "BluePrint";
+            }
+        }
+        else
+        {
+            return saveSlotToLoad;
+        }
     }
 
     public string GetSaveDirectory()
@@ -841,8 +869,8 @@ public class BPSaveDataReader : MonoBehaviour
             saveData = BPSaveParser.Parse(savePlainText);
 
             // From the save data, get the specific events we are looking for and the room draft counts - for only the save slot we care about.
-            events = GetSlotEvents(saveData, saveSlotToLoad);
-            roomRecords = GetRoomRecords(saveData, saveSlotToLoad);
+            events = GetSlotEvents(saveData, GetSaveSlot());
+            roomRecords = GetRoomRecords(saveData, GetSaveSlot());
 
             // Setting this bool lets the main Unity thread know that we are done loading the save data, and can reload the tracker again.
             shouldReloadData = true;
