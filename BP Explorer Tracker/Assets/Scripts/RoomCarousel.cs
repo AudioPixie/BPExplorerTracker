@@ -22,7 +22,7 @@ public class RoomCarousel : MonoBehaviour
 
     Canvas rootCanvas;
 
-    void Start()
+    void Awake()
     {
         rootCanvas = GetComponentInParent<Canvas>().rootCanvas;
         allRooms = roomGrid.GetComponentsInChildren<RoomItem>();
